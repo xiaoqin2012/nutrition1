@@ -4,5 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.myfirstui.DisplayMessageActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Button2" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Button1" />
+
+</FrameLayout>
 
