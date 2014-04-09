@@ -3,6 +3,7 @@
     package="net.tigerparents.nut" >
 
     <application
+        android:name="net.tigerparents.nut.NutritionTrackerApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -23,6 +24,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="StartScreen" />
+        </activity>
+        <activity
+            android:name="net.tigerparents.nut.FoodEntry"
+            android:label="@string/title_activity_food_entry"
+            android:parentActivityName="net.tigerparents.nut.NutritionTracker">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="NutritionTracker" />
         </activity>
     </application>
 

@@ -2,14 +2,13 @@ package net.tigerparents.nut;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 
 
 public class NutritionTracker extends Activity {
@@ -23,18 +22,11 @@ public class NutritionTracker extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
-        String[] food_names = getResources().getStringArray(R.array.food_array_0);
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-                        food_names);
-        food_tv.setAdapter(adapter);
     }
 
     public void onBreakfastButton(View view) {
-        getFragmentManager().beginTransaction()
-                .add(R.id.container, new PlaceholderFragment())
-                .commit();
+        Intent intent = new Intent(this, FoodEntry.class);
+        startActivity(intent);
     }
 
     @Override
