@@ -36,4 +36,5 @@ for array_num in range(0, num_arrays):
     for key in key_list:
         print '<item>' +key+'</item>'
     print '</integer-array>'
+    print '<integer name="food_array_size">'+str(num_arrays)+'</integer>'
 print '</resources>'
