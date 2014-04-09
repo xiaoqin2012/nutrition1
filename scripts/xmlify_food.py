@@ -19,6 +19,7 @@ print '<resources>'
 id_to_name_keys = id_to_name_mapping.keys()
 num_arrays = len(id_to_name_keys) / 500 + 1
 food_id = 0
+food_item_count = 0
 for array_num in range(0, num_arrays):
     print '<string-array name="food_array_'+str(array_num)+'">'
     key_list = []
@@ -30,11 +31,13 @@ for array_num in range(0, num_arrays):
         index = array_num * 500 + i
         key = id_to_name_keys[i]
         print '<item>' + id_to_name_mapping[key] + '</item>'
+        food_item_count += 1
         key_list.append(key)
     print '</string-array>'
     print '<integer-array name="food_id_' + str(array_num)+'">'
     for key in key_list:
         print '<item>' +key+'</item>'
     print '</integer-array>'
-    print '<integer name="food_array_size">'+str(num_arrays)+'</integer>'
+print '<integer name="food_array_size">'+str(num_arrays)+'</integer>'
+print '<integer name="food_item_count">'+str(food_item_count)+'</integer>'
 print '</resources>'

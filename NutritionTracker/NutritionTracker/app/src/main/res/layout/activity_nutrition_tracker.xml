@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:text="Breakfast"
         android:id="@+id/breakfast_button"
-        android:layout_gravity="left|top" />
+        android:layout_gravity="left|top"
+        android:onClick="onBreakfastButton" />
 
     <Button
         android:layout_width="wrap_content"
