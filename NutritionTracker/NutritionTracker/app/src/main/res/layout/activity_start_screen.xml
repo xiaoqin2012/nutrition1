@@ -2,29 +2,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="net.tigerparents.nut.StartScreen">
 
     <Button
+        android:id="@+id/tracker_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nutrition Tracker"
-        android:id="@+id/tracker_button"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="67dp"
-        android:onClick="onTrackerButtonClick" />
+        android:onClick="onTrackerButtonClick"
+        android:text="Nutrition Tracker" />
 
     <Button
+        android:id="@+id/list_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shopping List"
-        android:id="@+id/list_button"
-        android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/tracker_button"
         android:layout_alignStart="@+id/tracker_button"
-        android:onClick="onListButtonClick" />
+        android:layout_centerVertical="true"
+        android:onClick="onListButtonClick"
+        android:text="Shopping List" />
 </RelativeLayout>
