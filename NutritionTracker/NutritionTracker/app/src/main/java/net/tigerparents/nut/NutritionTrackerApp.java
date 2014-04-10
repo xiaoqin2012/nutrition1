@@ -64,7 +64,7 @@ public class NutritionTrackerApp extends Application {
             db.execSQL(sql);
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
+            return;
         }
         System.out.println("Table created successfully");
     }
