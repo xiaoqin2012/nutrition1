@@ -106,8 +106,6 @@ public class NutritionTrackerApp extends Application {
 
     /* query people_info_table show the current people and show the dialog to add more people */
     public void setupAccountShow() {
-
-
     }
 }
 

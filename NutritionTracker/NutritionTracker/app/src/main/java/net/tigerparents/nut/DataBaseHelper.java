@@ -55,10 +55,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
-
-
         }
-
     }
 
 
@@ -68,9 +65,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @return true if it exists, false if it doesn't
      */
     private boolean checkDataBase() {
-
         SQLiteDatabase checkDB = null;
-
         try {
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
@@ -107,40 +102,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         while ((length = myInput.read(buffer)) > 0) {
             myOutput.write(buffer, 0, length);
         }
-
         //Close the streams
         myOutput.flush();
         myOutput.close();
         myInput.close();
-
     }
 
     public void openDataBase(int mode) throws SQLException {
-
         //Open the database
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, mode);
-
     }
 
     @Override
     public synchronized void close() {
-
         if (myDataBase != null)
             myDataBase.close();
 
         super.close();
-
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 
     // Add your public helper methods to access and get content from the database.
