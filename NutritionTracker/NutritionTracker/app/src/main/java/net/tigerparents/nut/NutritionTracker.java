@@ -22,6 +22,8 @@ public class NutritionTracker extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+
     }
 
     public void onBreakfastButton(View view) {

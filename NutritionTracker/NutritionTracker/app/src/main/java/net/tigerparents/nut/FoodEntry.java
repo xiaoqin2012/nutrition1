@@ -18,15 +18,7 @@ public class FoodEntry extends Activity {
         AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
         int food_item_count = getResources().getInteger(R.integer.food_item_count);
         int food_array_size = getResources().getInteger(R.integer.food_array_size);
-        ArrayList<String> food_names = new ArrayList<String>(food_array_size);
-        String package_name = NutritionTrackerApp.getAppContext().getPackageName();
-        for (int i = 0; i < food_array_size; i++) {
-            String identifier = "food_array_"+i;
-            int id = getResources().getIdentifier(identifier, "array", package_name);
-            assert id != 0;
-            String names[] = getResources().getStringArray(id);
-            food_names.addAll(java.util.Arrays.asList(names));
-        }
+        ArrayList<String> food_names = NutritionTrackerApp.getFoodNames();
         String[] template = new String[food_item_count];
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
@@ -37,7 +29,6 @@ public class FoodEntry extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.food_entry, menu);
         return true;
