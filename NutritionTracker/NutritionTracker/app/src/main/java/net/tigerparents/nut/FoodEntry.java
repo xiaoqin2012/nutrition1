@@ -1,33 +1,39 @@
 package net.tigerparents.nut;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
+import java.util.ArrayList;
 
-public class StartScreen extends Activity {
+public class FoodEntry extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_screen);
+        setContentView(R.layout.activity_food_entry);
+        AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
+        int food_item_count = getResources().getInteger(R.integer.food_item_count);
+        int food_array_size = getResources().getInteger(R.integer.food_array_size);
+        ArrayList<String> food_names = NutritionTrackerApp.getFoodNames();
+
+        String[] template = new String[food_item_count];
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                        food_names.toArray(template));
+        food_tv.setAdapter(adapter);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.start_screen, menu);
-        return true;
-    }
 
-    public void onTrackerButtonClick(View view) {
-        Intent intent = new Intent(this, NutritionTracker.class);
-        startActivity(intent);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.food_entry, menu);
+        return true;
     }
 
     @Override
