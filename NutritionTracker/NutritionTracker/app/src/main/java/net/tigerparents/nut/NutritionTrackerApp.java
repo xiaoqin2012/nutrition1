@@ -30,8 +30,45 @@ public class NutritionTrackerApp extends Application {
         } catch (SQLException sqle) {
             throw sqle;
         }
+
         db = myDbHelper.getWritableDatabase();
+        createAllTables();
     }
+
+    public static void createAllTables() {
+        String sql;
+        try{
+            /* create people info table */
+            sql = "create table PEPOL_INFO_DATA (" +
+                    "_name STRING PRIMARY KEY, " +
+                    "birth INT, " +
+                    "status STRING, " +
+                    "gender STRING, " +
+                    "notes STRING )";
+            db.execSQL(sql);
+
+          /* create daily food log table */
+            sql = "create table DAILY_FOOD_LOG (" +
+                    "_name STRING, " +
+                    "date INT, " +
+                    "food_id STRING, " +
+                    "weight DOUBLE )";
+            db.execSQL(sql);
+
+          /* create weekly food bag log table */
+          /* date:food_id:weight */
+            sql = "create table WEEKLY_FOOD_LOG (" +
+                    "date INT, " +
+                    "food_id STRING, " +
+                    "weight DOUBLE )";
+            db.execSQL(sql);
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+        System.out.println("Table created successfully");
+    }
+
 
     public static Context getAppContext() {
         return NutritionTrackerApp.context;
