@@ -7,11 +7,14 @@ import java.util.ArrayList;
  */
 public class NutritionData {
     public static NutritionData getNutritionDataFor(String food_name, int weightInOunces) {
-        return null;
+        return new NutritionData();
     }
 
     public ArrayList<NutritionInformation> getNutritionInformation() {
-        return null;
+        ArrayList<NutritionInformation> info = new ArrayList<NutritionInformation>();
+        NutritionInformation ni = new NutritionInformation("Dummy", 0.0, 0.0);
+        info.add(ni);
+        return info;
     }
 
     public double getCalories() {
