@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -21,14 +22,16 @@ public class NutritionTrackerApp extends Application {
         DataBaseHelper myDbHelper = new DataBaseHelper(context);
         try {
             myDbHelper.createDataBase();
-        } catch (IOException ioe) {
+        } catch (IOException e) {
+            Log.e("NutritionTrackerApp", "setupAppDatabase unable to create", e);
             throw new Error("Unable to create database");
         }
 
         try {
             myDbHelper.openDataBase(SQLiteDatabase.OPEN_READWRITE);
-        } catch (SQLException sqle) {
-            throw sqle;
+        } catch (SQLException e) {
+            Log.e("NutritionTrackerApp", "setupAppDatabase unable to open", e);
+            throw e;
         }
 
         db = myDbHelper.getWritableDatabase();
@@ -39,7 +42,7 @@ public class NutritionTrackerApp extends Application {
         String sql;
         try{
             /* create people info table */
-            sql = "create table PEPOL_INFO_DATA (" +
+            sql = "create table PEP_INFO_DATA (" +
                     "_name STRING PRIMARY KEY, " +
                     "birth INT, " +
                     "status STRING, " +
@@ -47,14 +50,24 @@ public class NutritionTrackerApp extends Application {
                     "notes STRING )";
             db.execSQL(sql);
 
-          /* create daily food log table */
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e("NutritionTrackerApp", "createAllTables", e);
+        }
+
+        try {  /* create daily food log table */
             sql = "create table DAILY_FOOD_LOG (" +
                     "_name STRING, " +
                     "date INT, " +
                     "food_id STRING, " +
                     "weight DOUBLE )";
             db.execSQL(sql);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e("NutritionTrackerApp", "createAllTables", e);
+        }
 
+        try {
           /* create weekly food bag log table */
           /* date:food_id:weight */
             sql = "create table WEEKLY_FOOD_LOG (" +
@@ -64,8 +77,9 @@ public class NutritionTrackerApp extends Application {
             db.execSQL(sql);
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            return;
+            Log.e("NutritionTrackerApp", "createAllTables", e);
         }
+
         System.out.println("Table created successfully");
     }
 
