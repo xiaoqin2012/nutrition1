@@ -15,7 +15,6 @@ public class NutritionData {
     }
 
     public double getCalories() {
-        /* nutrition_id_kcal = 208 */
         return 0;
     }
 
