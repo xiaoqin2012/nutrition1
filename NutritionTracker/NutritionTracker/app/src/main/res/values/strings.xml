@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_nutrition_tracker">NutritionTracker</string>
     <string name="title_activity_food_entry">FoodEntry</string>
+    <string name="title_activity_nutrition_information_display">NutritionInformationDisplay</string>
 
 </resources>
