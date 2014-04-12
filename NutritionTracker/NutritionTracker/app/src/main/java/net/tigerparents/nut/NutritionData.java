@@ -56,8 +56,8 @@ public class NutritionData {
         Cursor dbCursor = database.rawQuery(sql, null);
         Cursor stdValueCursor = getSTDValue(profile);
 
-        do (nutrNameCursor.moveToFirst())
-        {
+        nutrNameCursor.moveToFirst();
+        do {
             String nutrNameString = nutrNameCursor.getString(1);
 
             String sql_nutr = "select * from NUTR_DEF where Nutr_No = \'"
@@ -74,8 +74,7 @@ public class NutritionData {
 
             NutritionInformation ni = new NutritionInformation(nutrName, value, 0.0);
             info.add(ni);
-        }
-        while (dbCursor.moveToNext())
+        } while (dbCursor.moveToNext());
 
         return info;
     }
