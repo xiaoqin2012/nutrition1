@@ -1,6 +1,5 @@
 package net.tigerparents.nut;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Calendar;
@@ -35,7 +34,7 @@ public class PersonProfile {
 
     public static PersonProfile getPersonProfile() {
         /* query personprofile database by default, using the first one */
-        String sql = "select * from PersonProfileTable";
+        /* String sql = "select * from PersonProfileTable";
         SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
         Cursor dbCursor = database.rawQuery(sql, null);
         if (dbCursor != null && dbCursor.moveToFirst()) {
@@ -44,7 +43,7 @@ public class PersonProfile {
                     dbCursor.getString(3),
                     dbCursor.getString(4),
                     dbCursor.getString(5));
-        }
+        } */
 
         return new PersonProfile("xiaoqin", 19751127, "female", null, null);
     }

@@ -45,6 +45,7 @@ public class NutritionTrackerApp extends Application {
     public static void createAllTables() {
         String sql;
         try{
+            db_helper.getDataBase().beginTransaction();
 
             sql = "create table PERSON_PROFILE_TABLE (" +
                     "_name STRING PRIMARY KEY, " +
@@ -53,6 +54,7 @@ public class NutritionTrackerApp extends Application {
                     "status STRING, " +
                     "notes STRING )";
             db_helper.getDataBase().execSQL(sql);
+            db_helper.getDataBase().endTransaction();
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -65,7 +67,10 @@ public class NutritionTrackerApp extends Application {
                     "date INT, " +
                     "food_name STRING, " +
                     "weight DOUBLE )";
+            db_helper.getDataBase().beginTransaction();
             db_helper.getDataBase().execSQL(sql);
+            db_helper.getDataBase().endTransaction();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             Log.e("NutritionTrackerApp", "createAllTables", e);
@@ -78,7 +83,10 @@ public class NutritionTrackerApp extends Application {
                     "date INT, " +
                     "food_id STRING, " +
                     "weight DOUBLE )";
+            db_helper.getDataBase().beginTransaction();
             db_helper.getDataBase().execSQL(sql);
+            db_helper.getDataBase().endTransaction();
+
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
             Log.e("NutritionTrackerApp", "createAllTables", e);
