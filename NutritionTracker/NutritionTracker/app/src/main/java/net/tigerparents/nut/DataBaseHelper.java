@@ -22,7 +22,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static String DB_NAME = "food.db";
     private final Context myContext;
-    private SQLiteDatabase myDataBase;
+    public SQLiteDatabase myDataBase;
 
     /**
      * Constructor
@@ -34,6 +34,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         super(context, DB_NAME, null, 1);
         this.myContext = context;
+    }
+
+    public SQLiteDatabase getDataBase() {
+        return myDataBase;
     }
 
     /**

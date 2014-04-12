@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -15,57 +16,74 @@ import java.util.ArrayList;
  */
 public class NutritionTrackerApp extends Application {
     private static Context context;
-    private static SQLiteDatabase db;
+    private static DataBaseHelper db_helper;
 
     public static void setupAppDatabase() {
-        DataBaseHelper myDbHelper = new DataBaseHelper(context);
+        db_helper = new DataBaseHelper(context);
         try {
-            myDbHelper.createDataBase();
-        } catch (IOException ioe) {
+            db_helper.createDataBase();
+        } catch (IOException e) {
+            Log.e("NutritionTrackerApp", "setupAppDatabase unable to create", e);
             throw new Error("Unable to create database");
         }
 
         try {
-            myDbHelper.openDataBase(SQLiteDatabase.OPEN_READWRITE);
-        } catch (SQLException sqle) {
-            throw sqle;
+            db_helper.openDataBase(SQLiteDatabase.OPEN_READWRITE);
+        } catch (SQLException e) {
+            Log.e("NutritionTrackerApp", "setupAppDatabase unable to open", e);
+            throw e;
         }
 
-        db = myDbHelper.getWritableDatabase();
+        db_helper.getWritableDatabase();
         createAllTables();
+    }
+
+    public static DataBaseHelper getDatabaseHelper() {
+        return db_helper;
     }
 
     public static void createAllTables() {
         String sql;
         try{
-            /* create people info table */
-            sql = "create table PEPOL_INFO_DATA (" +
+
+            sql = "create table PERSON_PROFILE_TABLE (" +
                     "_name STRING PRIMARY KEY, " +
                     "birth INT, " +
-                    "status STRING, " +
                     "gender STRING, " +
+                    "status STRING, " +
                     "notes STRING )";
-            db.execSQL(sql);
+            db_helper.getDataBase().execSQL(sql);
 
-          /* create daily food log table */
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e("NutritionTrackerApp", "createAllTables", e);
+        }
+
+        try {  /* create daily food log table */
             sql = "create table DAILY_FOOD_LOG (" +
                     "_name STRING, " +
                     "date INT, " +
-                    "food_id STRING, " +
+                    "food_name STRING, " +
                     "weight DOUBLE )";
-            db.execSQL(sql);
+            db_helper.getDataBase().execSQL(sql);
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e("NutritionTrackerApp", "createAllTables", e);
+        }
 
+        try {
           /* create weekly food bag log table */
           /* date:food_id:weight */
             sql = "create table WEEKLY_FOOD_LOG (" +
                     "date INT, " +
                     "food_id STRING, " +
                     "weight DOUBLE )";
-            db.execSQL(sql);
+            db_helper.getDataBase().execSQL(sql);
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            return;
+            Log.e("NutritionTrackerApp", "createAllTables", e);
         }
+
         System.out.println("Table created successfully");
     }
 
@@ -81,7 +99,7 @@ public class NutritionTrackerApp extends Application {
 
         try {
             sql = "SELECT _id, Long_Desc FROM FOOD_NUT_DATA;";
-            Cursor cursor = db.rawQuery(sql, null);
+            Cursor cursor = db_helper.getDataBase().rawQuery(sql, null);
             if (cursor.moveToFirst()) {
                 do {
                     food_list.add(cursor.getString(1));
@@ -107,5 +125,6 @@ public class NutritionTrackerApp extends Application {
     /* query people_info_table show the current people and show the dialog to add more people */
     public void setupAccountShow() {
     }
+
 }
 

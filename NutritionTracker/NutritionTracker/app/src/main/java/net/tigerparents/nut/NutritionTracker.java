@@ -22,8 +22,6 @@ public class NutritionTracker extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
-
     }
 
     public void onBreakfastButton(View view) {
@@ -33,7 +31,7 @@ public class NutritionTracker extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nutrition_tracker, menu);
         return true;
@@ -61,7 +59,7 @@ public class NutritionTracker extends Activity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
