@@ -26,6 +26,16 @@ public class NutritionData {
         return new NutritionData(prof, food_name, weightInOunces);
     }
 
+    public static  void peekTable(Cursor cursor) {
+
+
+        while (!cursor.isAfterLast()) {
+            Double test = cursor.getDouble(6);
+            System.out.print(test);
+            cursor.moveToNext();
+        }
+    }
+
     /*ql = "create table DAILY_FOOD_LOG (" +
                     "_name STRING, " +
                     "date INT, " +
@@ -49,12 +59,23 @@ public class NutritionData {
         ArrayList<NutritionInformation> info = new ArrayList<NutritionInformation>();
         SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
         Cursor nutrNameCursor;
+        PersonProfile person = PersonProfile.getPersonProfile();
+
 
         try {
             int i = 0;
             String sql = "select * from FOOD_NUT_DATA where Long_Desc = \'" + food_name + "\';";
             Cursor dbCursor = database.rawQuery(sql, null);
             dbCursor.moveToFirst();
+
+            sql = "select * from DAILY_STD_NUTR_TABLE" +
+                    " where " +
+                    " _status = " + "\"" + person.getStatus() + "\"" + " and " +
+                    "age_group = " + "\"" + person.getAgeGroup() + "\"" + ";";
+            Cursor stdValueCursor = database.rawQuery(sql, null);
+
+            stdValueCursor.moveToFirst();
+            //peekTable(stdValueCursor);
 
             //Cursor stdValueCursor = getSTDValue(profile);
 
@@ -69,13 +90,23 @@ public class NutritionData {
                 String nuName = nuCursor.getString(3) + " " + nuCursor.getString(1);
 
                 double value = dbCursor.getDouble(i);
-                value *= 28.35 / 100;
+                value *= weightInOunces * 28.35 / 100;
 
                 /* get the std value */
-                //int stdIndex = stdValueCursor.getColumnIndexOrThrow(nuNameString);
-                //double stdValue = value * 100 / (stdValueCursor.getDouble(stdIndex));
+                double stdValue = 0;
+                try {
+                    int stdIndex = stdValueCursor.getColumnIndexOrThrow(nuID);
+                    stdValue = stdValueCursor.getDouble(stdIndex);
+                    stdValue = value * 100 / (stdValueCursor.getDouble(stdIndex));
+                    if (nuID == "203") {//203 is protein
+                        stdValue *= person.getWeight() * 453.59 / 1000;
+                    }
+                } catch (Exception e) {
+                    System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                    Log.e("NutritionData.class", "getNutritionInformation()", e);
+                }
 
-                NutritionInformation ni = new NutritionInformation(nuName, value, 0.0);
+                NutritionInformation ni = new NutritionInformation(nuName, value, nuCursor.getString(1), stdValue);
                 info.add(ni);
             }
         } catch (Exception e) {
@@ -108,6 +139,7 @@ public class NutritionData {
 
     public double getCalories() {
         return 0;
+
     }
 
     public ArrayList<NutritionInformation> getDailyNutritionInformation() {
@@ -132,12 +164,15 @@ public class NutritionData {
     class NutritionInformation {
         String nutritionDescription;
         double weightValue;
+        String weightUnit;
         double percentageFDA;
 
-        NutritionInformation(String nutritionDescription, double weightValue,
+
+        NutritionInformation(String nutritionDescription, double weightValue, String weightUnit,
                              double percentageFDA) {
             this.nutritionDescription = nutritionDescription;
             this.weightValue = weightValue;
+            this.weightUnit = weightUnit;
             this.percentageFDA = percentageFDA;
         }
 

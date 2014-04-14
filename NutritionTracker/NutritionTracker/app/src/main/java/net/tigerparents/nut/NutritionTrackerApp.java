@@ -46,16 +46,25 @@ public class NutritionTrackerApp extends Application {
         return db_helper;
     }
 
-    public static void execSQL(String sql) {
-        try{
+    public static void createTable(String sql, String table_name) {
+        try {
+            db_helper.getDataBase().beginTransaction();
+            db_helper.getDataBase().execSQL("drop table if exists " + table_name);
+            db_helper.getDataBase().setTransactionSuccessful();
+            db_helper.getDataBase().endTransaction();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e("NutritionTrackerApp", "createTable", e);
+        }
+
+        try {
             db_helper.getDataBase().beginTransaction();
             db_helper.getDataBase().execSQL(sql);
             db_helper.getDataBase().setTransactionSuccessful();
             db_helper.getDataBase().endTransaction();
-
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            Log.e("NutritionTrackerApp", "createAllTables", e);
+            Log.e("NutritionTrackerApp", "createTable", e);
         }
 
     }
@@ -77,7 +86,7 @@ public class NutritionTrackerApp extends Application {
         cursor.close();
     }
 
-    public static void writeDailySTDTable(){
+    public static void writeDailySTDTable(String table_name) {
 
         try {
             InputStream input = getAppContext().getAssets().open("std_daily_table.txt");
@@ -92,7 +101,7 @@ public class NutritionTrackerApp extends Application {
                 /* get database column names and count */
                 ContentValues contentValues = new ContentValues();
 
-                Cursor cursor = db_helper.getDataBase().rawQuery("select * from DAILY_STD_NUTR_TABLE", null);
+                Cursor cursor = db_helper.getDataBase().rawQuery("select * from " + table_name, null);
                 String[] col_names = cursor.getColumnNames();
 
                 String[] words = line.split("\t");
@@ -101,7 +110,7 @@ public class NutritionTrackerApp extends Application {
                     contentValues.put("\'"+col_names[i]+"\'", words[i]);
                 }
                 System.out.print("test");
-                db_helper.getDataBase().insert("DAILY_STD_TABLE", null, contentValues);
+                db_helper.getDataBase().insert(table_name, null, contentValues);
             }
             db_helper.getDataBase().setTransactionSuccessful();
             db_helper.getDataBase().endTransaction();
@@ -115,70 +124,70 @@ public class NutritionTrackerApp extends Application {
 
     public static void createAllTables() {
         String sql;
+        String table_name;
 
         /* create daily std nutrition table */
-        sql = "create table DAILY_STD_NUTR_TABLE ( " +
-                "_status STRING PRIMARY KEY, " +
+        table_name = "DAILY_STD_NUTR_TABLE";
+
+        sql = "create table " + table_name + " ( " +
+                "_status STRING , " +
                 " age_group STRING, " +
+                " \"205\" DOUBLE, " +
+                " \"291\" DOUBLE, " +
                 " \"301\" DOUBLE, " +
-                " \"001\" DOUBLE, " +
-                " \"312\" DOUBLE, " +
-                " \"313\" DOUBLE, " +
-                " \"002\" DOUBLE, " +
-                " \"303\" DOUBLE, " +
-                " \"304\" DOUBLE, " +
-                " \"315\" DOUBLE, " +
-                " \"003\" DOUBLE, " +
-                " \"305\" DOUBLE, " +
-                " \"317\" DOUBLE, " +
-                " \"309\" DOUBLE, " +
-                " \"306\" DOUBLE, " +
-                " \"307\" DOUBLE, " +
-                " \"004\" DOUBLE, " +
+                " \"421\" DOUBLE, " +
+                " \"203\" DOUBLE, " +
                 " \"320\" DOUBLE, " +
                 " \"401\" DOUBLE, " +
                 " \"328\" DOUBLE, " +
                 " \"323\" DOUBLE, " +
-                " \"430\" DOUBLE, " +
                 " \"404\" DOUBLE, " +
                 " \"405\" DOUBLE, " +
                 " \"406\" DOUBLE, " +
                 " \"415\" DOUBLE, " +
                 " \"432\" DOUBLE, " +
                 " \"418\" DOUBLE, " +
-                " \"420\" DOUBLE, " +
-                " \"005\" DOUBLE, " +
-                " \"421\" DOUBLE " +
+                " \"312\" DOUBLE, " +
+                " \"002\" DOUBLE, " +
+                " \"303\" DOUBLE, " +
+                " \"315\" DOUBLE, " +
+                " \"003\" DOUBLE, " +
+                " \"305\" DOUBLE, " +
+                " \"317\" DOUBLE, " +
+                " \"309\" DOUBLE " +
                 ");";
-        execSQL(sql);
+        createTable(sql, table_name);
+        writeDailySTDTable(table_name);
 
          /* create person profile table */
-        sql = "create table PERSON_PROFILE_TABLE (" +
+        table_name = "PERSON_PROFILE_TABLE";
+        sql = "create table " + table_name + " (" +
                 "_name STRING PRIMARY KEY, " +
                 "birth INT, " +
                 "gender STRING, " +
                 "status STRING, " +
+                "weight DOUBLE, " +
                 "notes STRING )";
-        execSQL(sql);
+        db_helper.execSQL(sql, table_name);
 
         /* create daily food log */
-        sql = "create table DAILY_FOOD_LOG (" +
+        table_name = "DAILY_FOOD_LOG";
+        sql = "create table " + table_name + "  (" +
                     "_name STRING, " +
                     "date INT, " +
                     "food_name STRING, " +
                     "weight DOUBLE )";
-        execSQL(sql);
+        db_helper.execSQL(sql, table_name);
 
         /* create weekly food log */
-        sql = "create table WEEKLY_FOOD_LOG (" +
+        table_name = "WEEKLY_FOOD_LOG";
+        sql = "create table " + table_name + " (" +
                     "date INT, " +
                     "food_id STRING, " +
                     "weight DOUBLE )";
-        execSQL(sql);
+        db_helper.execSQL(sql, table_name);
 
-        writeDailySTDTable();
 
-        System.out.println("Table created successfully");
     }
 
 

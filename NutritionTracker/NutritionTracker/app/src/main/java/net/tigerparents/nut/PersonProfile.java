@@ -1,5 +1,6 @@
 package net.tigerparents.nut;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Calendar;
@@ -12,20 +13,26 @@ public class PersonProfile {
     int birth; //19751127
     String gender;
     String status = null;
+    double weight;
     String notes;
+
+    //calculated:
     int age;
+    String measure; //year or month all less than 1 year, treat as 1 year old.
+
     String ageGroup;
-    String measure; //year or month
 
 
     public PersonProfile(String name, int birth, String gender,
-                         String status, String notes) {
+                         String status, double weight, String notes) {
         this.name = name;
         this.birth = birth;
         this.gender = gender;
         this.status = status;
+        this.weight = weight;
         this.notes = notes;
         setAgeInfo();
+        savePersonProfile();
     }
 
     public static boolean isBetween(int x, int lower, int upper) {
@@ -34,24 +41,29 @@ public class PersonProfile {
 
     public static PersonProfile getPersonProfile() {
         /* query personprofile database by default, using the first one */
-        /* String sql = "select * from PersonProfileTable";
+        String sql = "select * from PERSON_PROFILE_TABLE";
         SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
         Cursor dbCursor = database.rawQuery(sql, null);
-        if (dbCursor != null && dbCursor.moveToFirst()) {
+        if (dbCursor.moveToFirst() && dbCursor != null) {
             return new PersonProfile(dbCursor.getString(1),
                     dbCursor.getInt(2),
                     dbCursor.getString(3),
                     dbCursor.getString(4),
-                    dbCursor.getString(5));
-        } */
+                    dbCursor.getDouble(5),
+                    dbCursor.getString(6));
+        }
 
-        return new PersonProfile("xiaoqin", 19751127, "female", null, null);
+        return new PersonProfile("xiaoqin", 19751127, "female", null, 120, null);
     }
 
     public String getStatus() {
         if (status != null)
             return status;
         else return gender;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 
     public String getAgeGroup() {
@@ -86,14 +98,14 @@ public class PersonProfile {
             return;
         }
 
-        if (isBetween(age, 1, 3)) ageGroup = "1-3y";
-        else if (isBetween(age, 4, 8)) ageGroup = "4-8y";
-        else if (isBetween(age, 1, 3)) ageGroup = "9-13y";
-        else if (isBetween(age, 1, 3)) ageGroup = "14-18y";
-        else if (isBetween(age, 1, 3)) ageGroup = "19-30y";
-        else if (isBetween(age, 1, 3)) ageGroup = "31-50y";
-        else if (isBetween(age, 1, 3)) ageGroup = "51-70y";
-        else ageGroup = ">70y";
+        if (isBetween(age, 1, 3)) ageGroup = "1-3";
+        else if (isBetween(age, 4, 8)) ageGroup = "4-8";
+        else if (isBetween(age, 9, 13)) ageGroup = "9-13";
+        else if (isBetween(age, 14, 18)) ageGroup = "14-18";
+        else if (isBetween(age, 19, 30)) ageGroup = "19-30";
+        else if (isBetween(age, 31, 50)) ageGroup = "31-50";
+        else if (isBetween(age, 51, 70)) ageGroup = "51-70";
+        else ageGroup = ">70";
         return;
     }
 
@@ -103,16 +115,17 @@ public class PersonProfile {
                 "birth INT, " +
                 "gender STRING, " +
                 "status STRING, " +
+                "weight DOUBLE, " +
                 "notes STRING )"; */
-        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, notes) " +
+
+        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight, notes) " +
                 "values ( " + "\'" + name + "\' " +
                 +birth + " " +
                 "\'" + gender + "\' " +
+                +weight +
                 "\'" + status + "\' " +
                 "\'" + notes + "\'); ";
 
-        SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
-
-        database.execSQL(sql);
+        NutritionTrackerApp.getDatabaseHelper().execSQL(sql, null);
     }
 }
