@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,6 +24,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "food.db";
     private final Context myContext;
     public SQLiteDatabase myDataBase;
+
+    String food_nutr_tab_name = "FOOD_NUT_DATA";
+    String nutr_desc_tab_name = "NUTR_DEF";
+    String daily_std_tab_name = "DAILY_STD_NUTR_TABLE";
+    String person_profile_tab_name = "PERSON_PROFILE_TABLE";
+    String daily_food_log = "DAILY_FOOD_LOG";
+    String weekly_food_log = "WEEKLY_FOOD_LOG";
 
     /**
      * Constructor
@@ -134,6 +142,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
+    public void execSQL(String sql, String table_name) {
+
+        /* give table name for create tables */
+        if (table_name != null) {
+            try {
+                getDataBase().beginTransaction();
+                getDataBase().execSQL("drop table if exists " + table_name);
+                getDataBase().setTransactionSuccessful();
+                getDataBase().endTransaction();
+            } catch (Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                Log.e("NutritionTrackerApp", "createTable", e);
+            }
+        }
+
+        try {
+            getDataBase().beginTransaction();
+            getDataBase().execSQL(sql);
+            getDataBase().setTransactionSuccessful();
+            getDataBase().endTransaction();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e("NutritionTrackerApp", "createTable", e);
+        }
+
+    }
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.
