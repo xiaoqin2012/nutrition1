@@ -2,6 +2,7 @@ package net.tigerparents.nut;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +14,8 @@ public class NutritionData {
     public String food_name;
     public int weightInOunces;
     PersonProfile profile;
+
+    private final String LOG_TAG = "NutritionData";
 
     public NutritionData(PersonProfile prof, String food_name, int weightInOunces) {
         this.food_name = food_name;
@@ -54,7 +57,7 @@ public class NutritionData {
 
         String sql = "select * from FOOD_NUT_DATA where Long_Desc = \'" + food_name + "\';";
         Cursor dbCursor = database.rawQuery(sql, null);
-        Cursor stdValueCursor = getSTDValue(profile);
+//        Cursor stdValueCursor = getSTDValue(profile);
 
         nutrNameCursor.moveToFirst();
         do {
@@ -62,6 +65,7 @@ public class NutritionData {
 
             String sql_nutr = "select * from NUTR_DEF where Nutr_No = \'"
                     + nutrNameString + "\';";
+            Log.d(LOG_TAG, "getNutritionInformation Query:" + sql_nutr);
             Cursor nutrCursor = database.rawQuery(sql_nutr, null);
             String nutrName = nutrCursor.getString(4) + " " + nutrCursor.getString(2);
 
@@ -69,8 +73,8 @@ public class NutritionData {
             double value = dbCursor.getDouble(index) * 28.35 / 100;
 
             /* get the std value */
-            int stdIndex = stdValueCursor.getColumnIndexOrThrow(nutrNameString);
-            double stdValue = value * 100 / (stdValueCursor.getDouble(stdIndex));
+            // int stdIndex = stdValueCursor.getColumnIndexOrThrow(nutrNameString);
+            double stdValue = value * 100;
 
             NutritionInformation ni = new NutritionInformation(nutrName, value, 0.0);
             info.add(ni);
