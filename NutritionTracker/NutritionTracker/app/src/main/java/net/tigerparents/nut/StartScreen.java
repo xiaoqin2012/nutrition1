@@ -30,6 +30,11 @@ public class StartScreen extends Activity {
         startActivity(intent);
     }
 
+    public void enterUserData(View view) {
+        Intent intent = new Intent(this, EnterUserData.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -15,24 +15,24 @@ public class PersonProfile {
     String status = null;
     double weight;
     String notes;
-
     //calculated:
     int age;
     String measure; //year or month all less than 1 year, treat as 1 year old.
-
     String ageGroup;
 
-
     public PersonProfile(String name, int birth, String gender,
-                         String status, double weight, String notes) {
+                         String status, double weight) {
         this.name = name;
         this.birth = birth;
         this.gender = gender;
         this.status = status;
         this.weight = weight;
-        this.notes = notes;
         setAgeInfo();
         savePersonProfile();
+    }
+
+    public static boolean profileEntered() {
+        return false;
     }
 
     public static boolean isBetween(int x, int lower, int upper) {
@@ -51,20 +51,31 @@ public class PersonProfile {
                     dbCursor.getString(3),
                     dbCursor.getString(4),
 
-                    dbCursor.getDouble(5),
-                    dbCursor.getString(6));
+                    dbCursor.getDouble(5));
         }
-        return new PersonProfile("xiaoqin", 19751127, "female", null, 120, null);
+        return new PersonProfile("xiaoqin", 19751127, "female", null, 120);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getBirth() {
+        return birth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 
     public String getStatus() {
         if (status != null)
             return status;
         else return gender;
-    }
-
-    public double getWeight() {
-        return weight;
     }
 
     public String getAgeGroup() {
@@ -124,8 +135,7 @@ public class PersonProfile {
                 +birth + " " +
                 "\'" + gender + "\' " +
                 +weight +
-                "\'" + status + "\' " +
-                "\'" + notes + "\'); ";
+                "\'" + status + "\' ); ";
 
         NutritionTrackerApp.getDatabaseHelper().execSQL(sql, null);
     }

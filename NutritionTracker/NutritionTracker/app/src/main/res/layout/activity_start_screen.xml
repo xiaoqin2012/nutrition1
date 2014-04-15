@@ -27,4 +27,15 @@
         android:layout_centerVertical="true"
         android:onClick="onListButtonClick"
         android:text="Shopping List" />
+
+    <Button
+        android:id="@+id/userdata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/list_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/list_button"
+        android:layout_marginBottom="84dp"
+        android:onClick="enterUserData"
+        android:text="Enter User Data" />
 </RelativeLayout>

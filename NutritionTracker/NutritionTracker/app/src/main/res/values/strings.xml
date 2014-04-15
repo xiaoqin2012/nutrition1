@@ -7,5 +7,6 @@
     <string name="title_activity_nutrition_tracker">NutritionTracker</string>
     <string name="title_activity_food_entry">FoodEntry</string>
     <string name="title_activity_nutrition_information_display">NutritionInformationDisplay</string>
+    <string name="title_activity_enter_user_data">EnterUserData</string>
 
 </resources>
