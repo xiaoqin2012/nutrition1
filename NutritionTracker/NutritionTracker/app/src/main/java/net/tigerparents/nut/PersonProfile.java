@@ -12,33 +12,22 @@ import java.util.Calendar;
 public class PersonProfile {
     String name;
     int birth; //19751127
-    String gender;
-    String status = null;
+    boolean gender;
+    boolean isPregnant;
+    boolean isLactating;
     double weight;
-    String notes;
     //calculated:
     int age;
     String measure; //year or month all less than 1 year, treat as 1 year old.
     String ageGroup;
 
-    public PersonProfile(String name, int birth, String gender, boolean isPregnancy, boolean isLactation, double weight) {
+    public PersonProfile(String name, int birth, boolean gender, boolean isPregnant,
+                         boolean isLactating, double weight) {
         this.name = name;
         this.birth = birth;
         this.gender = gender;
-        if (isPregnancy)
-            this.status = "pregnancy";
-        else if (isLactation)
-            this.status = "lactation";
-        else status = gender;
-        this.weight = weight;
-        setAgeInfo();
-    }
-
-    public PersonProfile(String name, int birth, String gender, String status, double weight) {
-        this.name = name;
-        this.birth = birth;
-        this.gender = gender;
-        this.status = status;
+        this.isPregnant = isPregnant;
+        this.isLactating = isLactating;
         this.weight = weight;
         setAgeInfo();
     }
@@ -69,16 +58,28 @@ public class PersonProfile {
 
             Cursor dbCursor = database.rawQuery(sql, null);
             if (dbCursor.moveToFirst() && dbCursor != null) {
-                return new PersonProfile(dbCursor.getString(0),
-                        dbCursor.getInt(1),
-                        dbCursor.getString(2),
-                        dbCursor.getString(3),
-                        dbCursor.getDouble(4));
-            } else return null;
+                String name = dbCursor.getString(0);
+                int birth_year = dbCursor.getInt(1);
+                String gender = dbCursor.getString(2);
+                String lactating_pregnancy_status = dbCursor.getString(3);
+                String[] status = lactating_pregnancy_status.split(":");
+                double weight = dbCursor.getDouble(4);
+                return new PersonProfile(name, birth_year, gender != "female",
+                        status[0] == "yes", status[1] == "yes", weight);
+            } else
+                return null;
         } catch (Exception e) {
             Log.e(e.getClass().getName(), e.getMessage(), e);
             return null;
         }
+    }
+
+    public boolean isPregnant() {
+        return isPregnant;
+    }
+
+    public boolean isLactating() {
+        return isLactating;
     }
 
     public String getName() {
@@ -89,7 +90,7 @@ public class PersonProfile {
         return birth;
     }
 
-    public String getGender() {
+    public boolean getGender() {
         return gender;
     }
 
@@ -97,13 +98,6 @@ public class PersonProfile {
         return weight;
     }
 
-    public String getStatus() {
-        return gender;
-
-        /*if (status != null)
-            return status;
-        else return gender; */
-    }
 
     public String getAgeGroup() {
         return ageGroup;
@@ -125,6 +119,7 @@ public class PersonProfile {
     }
 
     public void savePersonProfile() {
+        String status = getStatus();
         String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight) " +
                 "values ( " + "\'" + name + "\', " +
                 +birth + ", " +
@@ -134,5 +129,9 @@ public class PersonProfile {
                 " ); ";
 
         NutritionTrackerApp.getDatabaseHelper().execSQL(sql, null);
+    }
+
+    public String getStatus() {
+        return (isPregnant() ? "no" : "yes") + ":" + (isLactating() ? "no" : "yes");
     }
 }
