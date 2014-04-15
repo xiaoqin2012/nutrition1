@@ -14,7 +14,7 @@ public class NutritionData {
     private final String LOG_TAG = "NutritionData";
     public String food_name;
     public int weightInOunces;
-    PersonProfile profile;
+    PersonProfile profile = null;
 
     public NutritionData(PersonProfile prof, String food_name, int weightInOunces) {
         this.food_name = food_name;
@@ -27,21 +27,6 @@ public class NutritionData {
         return new NutritionData(prof, food_name, weightInOunces);
     }
 
-    public static  void peekTable(Cursor cursor) {
-
-
-        while (!cursor.isAfterLast()) {
-            Double test = cursor.getDouble(6);
-            System.out.print(test);
-            cursor.moveToNext();
-        }
-    }
-
-    /*ql = "create table DAILY_FOOD_LOG (" +
-                    "_name STRING, " +
-                    "date INT, " +
-                    "food_name STRING, " +
-                    "weight DOUBLE )";*/
     public void save() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH);
@@ -61,8 +46,8 @@ public class NutritionData {
         SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
 
         Cursor nutrNameCursor;
-        PersonProfile person = PersonProfile.getPersonProfile();
-
+        if (profile == null)
+            profile = PersonProfile.getPersonProfile();
 
         try {
             int i = 0;
@@ -72,14 +57,11 @@ public class NutritionData {
 
             sql = "select * from DAILY_STD_NUTR_TABLE" +
                     " where " +
-                    " _status = " + "\"" + person.getStatus() + "\"" + " and " +
-                    "age_group = " + "\"" + person.getAgeGroup() + "\"" + ";";
+                    " _status = " + "\"" + profile.getStatus() + "\"" + " and " +
+                    "age_group = " + "\"" + profile.getAgeGroup() + "\"" + ";";
             Cursor stdValueCursor = database.rawQuery(sql, null);
 
             stdValueCursor.moveToFirst();
-            //peekTable(stdValueCursor);
-
-            //Cursor stdValueCursor = getSTDValue(profile);
 
             for (i = 4; i < dbCursor.getColumnCount(); i++) {
                 String nuID = dbCursor.getColumnName(i);
@@ -89,7 +71,7 @@ public class NutritionData {
                         + nuID + "\';";
                 Cursor nuCursor = database.rawQuery(sql_nu, null);
                 nuCursor.moveToFirst();
-                String nuName = nuCursor.getString(3) + " " + nuCursor.getString(1);
+                String nuName = nuCursor.getString(3) + " ";
 
                 double value = dbCursor.getDouble(i);
                 value *= weightInOunces * 28.35 / 100;
@@ -100,12 +82,16 @@ public class NutritionData {
                     int stdIndex = stdValueCursor.getColumnIndexOrThrow(nuID);
                     stdValue = stdValueCursor.getDouble(stdIndex);
                     stdValue = value * 100 / (stdValueCursor.getDouble(stdIndex));
-                    if (nuID == "203") {//203 is protein
-                        stdValue *= person.getWeight() * 453.59 / 1000;
+                    if (nuID.equals("203")) {//203 is protein
+                        stdValue *= profile.getWeight() * 453.59 / 1000;
                     }
                 } catch (Exception e) {
                     System.err.println(e.getClass().getName() + ": " + e.getMessage());
                     Log.e("NutritionData.class", "getNutritionInformation()", e);
+                }
+
+                if (nuID.endsWith("208")) {
+                    nuName = "Calories";
                 }
 
                 NutritionInformation ni = new NutritionInformation(nuName, value, nuCursor.getString(1), stdValue);

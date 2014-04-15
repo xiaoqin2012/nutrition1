@@ -166,8 +166,8 @@ public class NutritionTrackerApp extends Application {
                 "birth INT, " +
                 "gender STRING, " +
                 "status STRING, " +
-                "weight DOUBLE, " +
-                "notes STRING )";
+                "weight DOUBLE " +
+                ")";
         db_helper.execSQL(sql, table_name);
 
         /* create daily food log */
