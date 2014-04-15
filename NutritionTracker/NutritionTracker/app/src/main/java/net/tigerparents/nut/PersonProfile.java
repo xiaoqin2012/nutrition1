@@ -2,6 +2,7 @@ package net.tigerparents.nut;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -20,18 +21,39 @@ public class PersonProfile {
     String measure; //year or month all less than 1 year, treat as 1 year old.
     String ageGroup;
 
-    public PersonProfile(String name, int birth, String gender,
-                         String status, double weight) {
+    public PersonProfile(String name, int birth, String gender, boolean isPregnancy, boolean isLactation, double weight) {
+        this.name = name;
+        this.birth = birth;
+        this.gender = gender;
+        if (isPregnancy)
+            this.status = "pregnancy";
+        else if (isLactation)
+            this.status = "lactation";
+        else status = gender;
+        this.weight = weight;
+        setAgeInfo();
+    }
+
+    public PersonProfile(String name, int birth, String gender, String status, double weight) {
         this.name = name;
         this.birth = birth;
         this.gender = gender;
         this.status = status;
         this.weight = weight;
         setAgeInfo();
-        savePersonProfile();
     }
 
     public static boolean profileEntered() {
+        String sql = "select * from PERSON_PROFILE_TABLE";
+        try {
+            Cursor dbCursor = NutritionTrackerApp.getDatabaseHelper().getDataBase().rawQuery(sql, null);
+            if (dbCursor.moveToFirst() && dbCursor != null) {
+                return true;
+            }
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
+
         return false;
     }
 
@@ -40,20 +62,23 @@ public class PersonProfile {
     }
 
     public static PersonProfile getPersonProfile() {
+        try {
         /* query personprofile database by default, using the first one */
-        String sql = "select * from PERSON_PROFILE_TABLE";
-        SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
+            String sql = "select * from PERSON_PROFILE_TABLE";
+            SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
 
-        Cursor dbCursor = database.rawQuery(sql, null);
-        if (dbCursor.moveToFirst() && dbCursor != null) {
-            return new PersonProfile(dbCursor.getString(1),
-                    dbCursor.getInt(2),
-                    dbCursor.getString(3),
-                    dbCursor.getString(4),
-
-                    dbCursor.getDouble(5));
+            Cursor dbCursor = database.rawQuery(sql, null);
+            if (dbCursor.moveToFirst() && dbCursor != null) {
+                return new PersonProfile(dbCursor.getString(0),
+                        dbCursor.getInt(1),
+                        dbCursor.getString(2),
+                        dbCursor.getString(3),
+                        dbCursor.getDouble(4));
+            } else return null;
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+            return null;
         }
-        return new PersonProfile("xiaoqin", 19751127, "female", null, 120);
     }
 
     public String getName() {
@@ -73,9 +98,11 @@ public class PersonProfile {
     }
 
     public String getStatus() {
-        if (status != null)
+        return gender;
+
+        /*if (status != null)
             return status;
-        else return gender;
+        else return gender; */
     }
 
     public String getAgeGroup() {
@@ -84,33 +111,9 @@ public class PersonProfile {
 
     public void setAgeInfo() {
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
-        int currMon = Calendar.getInstance().get(Calendar.MONTH);
+        age = currYear - birth;
 
-        int year = birth / 10000;
-        int month = (birth / 100) % 100;
-        boolean lessOneyear = false;
-
-        age = currYear - currMon;
-        measure = "year";
-
-        if (age < 1) {
-            lessOneyear = true;
-            month = currMon - month;
-        }
-
-        month = 12 - month + 1 + currMon;
-
-        if (year == 1 && month < 12) lessOneyear = true;
-
-        if (lessOneyear) {
-            age = month;
-            measure = "month";
-            if (month < 6) ageGroup = "0-6m";
-            else ageGroup = "6-12m";
-            return;
-        }
-
-        if (isBetween(age, 1, 3)) ageGroup = "1-3";
+        if (isBetween(age, 0, 3)) ageGroup = "1-3";
         else if (isBetween(age, 4, 8)) ageGroup = "4-8";
         else if (isBetween(age, 9, 13)) ageGroup = "9-13";
         else if (isBetween(age, 14, 18)) ageGroup = "14-18";
@@ -122,20 +125,13 @@ public class PersonProfile {
     }
 
     public void savePersonProfile() {
-        /*sql = "create table PERSON_PROFILE (" +
-                "_name STRING PRIMARY KEY, " +
-                "birth INT, " +
-                "gender STRING, " +
-                "status STRING, " +
-                "weight DOUBLE, " +
-                "notes STRING )"; */
-
-        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight, notes) " +
-                "values ( " + "\'" + name + "\' " +
-                +birth + " " +
-                "\'" + gender + "\' " +
+        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight) " +
+                "values ( " + "\'" + name + "\', " +
+                +birth + ", " +
+                "\'" + gender + "\', " +
+                "\'" + status + "\', " +
                 +weight +
-                "\'" + status + "\' ); ";
+                " ); ";
 
         NutritionTrackerApp.getDatabaseHelper().execSQL(sql, null);
     }

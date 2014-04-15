@@ -104,7 +104,7 @@ public class EnterUserData extends Activity {
         String gender = _person_gender ? "female" : "male";
         String pregnant = _is_person_pregnant ? "no" : "yes";
         String lactating = _is_person_lactating ? "no" : "yes";
-        PersonProfile pp = new PersonProfile(name, year, gender, pregnant + ":" + lactating,
+        PersonProfile pp = new PersonProfile(name, year, gender, _is_person_pregnant, _is_person_lactating,
                 _weight.getValue());
         pp.savePersonProfile();
         Intent intent = new Intent(this, StartScreen.class);
