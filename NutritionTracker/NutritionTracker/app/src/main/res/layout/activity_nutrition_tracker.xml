@@ -27,4 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left|bottom"
         android:text="Dinner" />
+
+    <Button
+        android:id="@+id/showReports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:onClick="showReports"
+        android:text="Reports" />
+
 </FrameLayout>

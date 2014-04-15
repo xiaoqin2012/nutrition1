@@ -49,6 +49,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="StartScreen" />
         </activity>
+        <activity
+            android:name="net.tigerparents.nut.ShowReports"
+            android:label="@string/title_activity_show_reports"
+            android:parentActivityName="net.tigerparents.nut.NutritionTracker">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="NutritionTracker" />
+        </activity>
     </application>
 
 </manifest>

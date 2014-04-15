@@ -49,6 +49,11 @@ public class NutritionTracker extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void showReports(View view) {
+        Intent intent = new Intent(this, ShowReports.class);
+        startActivity(intent);
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */

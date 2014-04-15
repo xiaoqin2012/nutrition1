@@ -16,6 +16,10 @@ public class NutritionData {
     public int weightInOunces;
     PersonProfile profile = null;
 
+    public NutritionData(String food_name, int weightInOunces) {
+
+    }
+
     public NutritionData(PersonProfile prof, String food_name, int weightInOunces) {
         this.food_name = food_name;
         this.weightInOunces = weightInOunces;
@@ -27,18 +31,25 @@ public class NutritionData {
         return new NutritionData(prof, food_name, weightInOunces);
     }
 
+    public static ArrayList<NutritionInformation> getNutritionInformationReport(ReportTypes type) {
+        ArrayList<NutritionInformation> sumNutritionList = new ArrayList<NutritionInformation>();
+        return sumNutritionList;
+    }
+
     public void save() {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int date = Calendar.getInstance().get(Calendar.DATE);
+        if (false) {
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            int month = Calendar.getInstance().get(Calendar.MONTH);
+            int date = Calendar.getInstance().get(Calendar.DATE);
 
-        date = year * 10000 + month * 100 + date;
+            date = year * 10000 + month * 100 + date;
 
-        String sql = "insert into DAILY_FOOD_LOG (date, food_name, weight) " +
-                "values ( " + date + " " +
-                "\'" + food_name + "\' " + weightInOunces + ");";
-        SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
-        database.execSQL(sql, null);
+            String sql = "insert into DAILY_FOOD_LOG (date, food_name, weight) " +
+                    "values ( " + date + " " +
+                    "\'" + food_name + "\' " + weightInOunces + ");";
+            SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
+            database.execSQL(sql, null);
+        }
     }
 
     public ArrayList<NutritionInformation> getNutritionInformation() {
@@ -146,6 +157,10 @@ public class NutritionData {
         /*for each food, do the following and sum them up*/
         PersonProfile prof = PersonProfile.getPersonProfile();
         return (new NutritionData(prof, food_name, weightInOunces)).getNutritionInformation();
+    }
+
+    public enum ReportTypes {
+        DAILY, WEEKLY, MONTHLY
     }
 
     class NutritionInformation {
