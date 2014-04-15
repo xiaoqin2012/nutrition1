@@ -29,9 +29,10 @@ public class NutritionInformationDisplay extends Activity {
                 intent.getStringExtra(FoodEntry.FOOD_NAME), nut_data.getCalories());
         listview_data.add(header_text);
         for (NutritionData.NutritionInformation i : info) {
-            String row_text = String.format("%s: %.2f %.1f",
+            String row_text = String.format("%s: %.2f%s %.1f",
                     i.getNutritionDescription(),
                     i.getWeightValue(),
+                    i.getWeightUnit(),
                     i.getPercentageFDA());
             listview_data.add(row_text);
         }

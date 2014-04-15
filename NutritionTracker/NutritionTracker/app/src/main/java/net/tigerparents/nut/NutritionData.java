@@ -11,6 +11,7 @@ import java.util.Calendar;
  * Created by xiaoqin on 4/10/2014.
  */
 public class NutritionData {
+    private final String LOG_TAG = "NutritionData";
     public String food_name;
     public int weightInOunces;
     PersonProfile profile;
@@ -58,6 +59,7 @@ public class NutritionData {
     public ArrayList<NutritionInformation> getNutritionInformation() {
         ArrayList<NutritionInformation> info = new ArrayList<NutritionInformation>();
         SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
+
         Cursor nutrNameCursor;
         PersonProfile person = PersonProfile.getPersonProfile();
 
@@ -113,7 +115,6 @@ public class NutritionData {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             Log.e("NutritionData.class", "getNutritionInformation()", e);
         }
-
         return info;
     }
 
@@ -182,6 +183,10 @@ public class NutritionData {
 
         public void setNutritionDescription(String nutritionDescription) {
             this.nutritionDescription = nutritionDescription;
+        }
+
+        public String getWeightUnit() {
+            return weightUnit;
         }
 
         public double getWeightValue() {
