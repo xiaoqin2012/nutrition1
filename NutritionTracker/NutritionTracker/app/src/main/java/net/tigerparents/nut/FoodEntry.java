@@ -38,6 +38,10 @@ public class FoodEntry extends Activity {
     public void onSave(View v) {
         AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
         NumberPicker picker = (NumberPicker) findViewById(R.id.weightPicker);
+        String food_name = food_tv.getText().toString();
+        int weight_in_ounces = picker.getValue();
+        NutritionData new_data = new NutritionData(food_name, weight_in_ounces);
+        new_data.save();
         Intent intent = new Intent(this, NutritionInformationDisplay.class);
         intent.putExtra(FOOD_NAME, food_tv.getText().toString());
         intent.putExtra(WEIGHT_IN_OUNCES, picker.getValue());
