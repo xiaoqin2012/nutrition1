@@ -11,11 +11,10 @@ import java.util.Calendar;
  * Created by xiaoqin on 4/10/2014.
  */
 public class NutritionData {
+    private final String LOG_TAG = "NutritionData";
     public String food_name;
     public int weightInOunces;
     PersonProfile profile;
-
-    private final String LOG_TAG = "NutritionData";
 
     public NutritionData(PersonProfile prof, String food_name, int weightInOunces) {
         this.food_name = food_name;
@@ -184,6 +183,10 @@ public class NutritionData {
 
         public void setNutritionDescription(String nutritionDescription) {
             this.nutritionDescription = nutritionDescription;
+        }
+
+        public String getWeightUnit() {
+            return weightUnit;
         }
 
         public double getWeightValue() {
