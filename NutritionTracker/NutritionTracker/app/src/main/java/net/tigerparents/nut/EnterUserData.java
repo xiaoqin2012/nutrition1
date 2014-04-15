@@ -48,13 +48,10 @@ public class EnterUserData extends Activity {
         PersonProfile pp = PersonProfile.getPersonProfile();
         _name.setText(pp.getName());
         _birthyear.setValue(pp.getBirth());
-        if (pp.getGender() == "M")
-            _gender.setChecked(true);
-        else
-            _gender.setChecked(false);
+        _gender.setChecked(pp.getGender());
         _weight.setValue((int) pp.getWeight());
-
-        // have no idea what to do with the breast feeding stuff
+        _is_person_pregnant = pp.isPregnant();
+        _is_person_lactating = pp.isLactating();
     }
 
     private void setDefaultPersonProfile() {
@@ -101,11 +98,8 @@ public class EnterUserData extends Activity {
     public void userSave(View view) {
         String name = _name.getText().toString();
         int year = _birthyear.getValue();
-        String gender = _person_gender ? "female" : "male";
-        String pregnant = _is_person_pregnant ? "no" : "yes";
-        String lactating = _is_person_lactating ? "no" : "yes";
-        PersonProfile pp = new PersonProfile(name, year, gender, _is_person_pregnant, _is_person_lactating,
-                _weight.getValue());
+        PersonProfile pp = new PersonProfile(name, year, _person_gender, _is_person_pregnant,
+                _is_person_lactating, _weight.getValue());
         pp.savePersonProfile();
         Intent intent = new Intent(this, StartScreen.class);
         startActivity(intent);
