@@ -28,18 +28,17 @@
         android:id="@+id/birthYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/saveButton"
-        android:layout_alignRight="@+id/saveButton"
-        android:layout_below="@+id/name"
-        android:layout_marginTop="31dp" />
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignRight="@+id/textView"
+        android:layout_below="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pregnant"
-        android:layout_alignStart="@+id/pregnant"
-        android:layout_alignTop="@+id/birthYear"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/name"
         android:text="Birth year"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -47,9 +46,9 @@
         android:id="@+id/gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pregnant"
-        android:layout_alignStart="@+id/pregnant"
-        android:layout_below="@+id/weightPicker"
+        android:layout_alignLeft="@+id/birthYear"
+        android:layout_alignStart="@+id/birthYear"
+        android:layout_centerVertical="true"
         android:checked="false"
         android:text="Gender" />
 
@@ -57,10 +56,9 @@
         android:id="@+id/pregnant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/lactate"
-        android:layout_alignLeft="@+id/lactate"
-        android:layout_alignStart="@+id/lactate"
-        android:layout_marginBottom="31dp"
+        android:layout_alignEnd="@+id/gender"
+        android:layout_alignRight="@+id/gender"
+        android:layout_below="@+id/gender"
         android:checked="false"
         android:text="Pregnant" />
 
@@ -68,9 +66,9 @@
         android:id="@+id/lactate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/saveButton"
-        android:layout_marginBottom="29dp"
-        android:layout_toLeftOf="@+id/textView2"
+        android:layout_alignEnd="@+id/pregnant"
+        android:layout_alignRight="@+id/pregnant"
+        android:layout_below="@+id/pregnant"
         android:checked="false"
         android:text="Breast Feeding" />
 
@@ -78,8 +76,9 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/weightPicker"
+        android:layout_alignStart="@+id/weightPicker"
+        android:layout_alignTop="@+id/pregnant"
         android:onClick="userSave"
         android:text="Save" />
 
@@ -89,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/name"
         android:layout_alignRight="@+id/name"
-        android:layout_alignTop="@+id/birthYear"
+        android:layout_alignTop="@+id/textView"
         android:text="Pounds"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -99,7 +98,6 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/textView2"
         android:layout_alignRight="@+id/textView2"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="34dp" />
+        android:layout_below="@+id/textView2" />
 
 </RelativeLayout>
