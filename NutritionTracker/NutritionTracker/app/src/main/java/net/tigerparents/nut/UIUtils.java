@@ -1,7 +1,10 @@
 package net.tigerparents.nut;
 
 import android.app.Activity;
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -26,5 +29,16 @@ public class UIUtils {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 activity, android.R.layout.simple_list_item_1, listview_data);
         listview.setAdapter(arrayAdapter);
+    }
+
+    public static void HideKeyboard(Activity activity, EditText edit_text) {
+        ((InputMethodManager) activity.getSystemService(
+                Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                edit_text.getWindowToken(), 0);
+    }
+
+    public static void ShowKeyboard(Activity activity) {
+        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 }
