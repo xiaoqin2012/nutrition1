@@ -35,6 +35,8 @@ public class FoodEntry extends Activity {
         picker.setMinValue(1);
         picker.setMaxValue(64);
         picker.setValue(1);
+        food_tv.requestFocusFromTouch();
+        UIUtils.ShowKeyboard(this);
     }
 
     public void onSave(View v) {
@@ -45,9 +47,19 @@ public class FoodEntry extends Activity {
         NutritionData new_data = new NutritionData(food_name, weight_in_ounces);
         new_data.save();
         Intent intent = new Intent(this, NutritionInformationDisplay.class);
+        UIUtils.HideKeyboard(this, food_tv);
         intent.putExtra(FOOD_NAME, food_tv.getText().toString());
         intent.putExtra(WEIGHT_IN_OUNCES, picker.getValue());
         startActivity(intent);
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            ((AutoCompleteTextView) findViewById(R.id.food_entry_tv)).requestFocusFromTouch();
+            UIUtils.ShowKeyboard(this);
+        }
     }
 
     @Override

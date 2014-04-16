@@ -42,6 +42,8 @@ public class EnterUserData extends Activity {
         if (PersonProfile.profileEntered()) {
             readDefaultPersonProfile();
         }
+        _name.requestFocusFromTouch();
+        UIUtils.ShowKeyboard(this);
     }
 
     private void readDefaultPersonProfile() {
@@ -94,6 +96,14 @@ public class EnterUserData extends Activity {
         _weight.setValue(100); // should make women happy
     }
 
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            ((EditText) findViewById(R.id.name)).requestFocusFromTouch();
+            UIUtils.ShowKeyboard(this);
+        }
+    }
 
     public void userSave(View view) {
         String name = _name.getText().toString();
@@ -101,6 +111,7 @@ public class EnterUserData extends Activity {
         PersonProfile pp = new PersonProfile(name, year, _person_gender, _is_person_pregnant,
                 _is_person_lactating, _weight.getValue());
         pp.savePersonProfile();
+        UIUtils.HideKeyboard(this, _name);
         Intent intent = new Intent(this, StartScreen.class);
         startActivity(intent);
     }
