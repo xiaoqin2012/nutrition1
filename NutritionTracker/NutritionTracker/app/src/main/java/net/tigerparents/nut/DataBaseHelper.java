@@ -1,3 +1,4 @@
+
 package net.tigerparents.nut;
 
 
@@ -22,17 +23,17 @@ import java.io.OutputStream;
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    public static String food_nutr_tab_name = "FOOD_NUT_DATA";
+    public static String nutr_desc_tab_name = "NUTR_DEF";
+    public static String daily_std_tab_name = "DAILY_STD_NUTR_TABLE";
+    public static String person_profile_tab_name = "PERSON_PROFILE_TABLE";
+    public static String daily_food_log = "DAILY_FOOD_LOG";
+    public static String weekly_food_log = "WEEKLY_FOOD_LOG";
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/net.tigerparents.nut/databases/";
     private static String DB_NAME = "food.db";
     private final Context myContext;
     public SQLiteDatabase myDataBase = null;
-    String food_nutr_tab_name = "FOOD_NUT_DATA";
-    String nutr_desc_tab_name = "NUTR_DEF";
-    String daily_std_tab_name = "DAILY_STD_NUTR_TABLE";
-    String person_profile_tab_name = "PERSON_PROFILE_TABLE";
-    String daily_food_log = "DAILY_FOOD_LOG";
-    String weekly_food_log = "WEEKLY_FOOD_LOG";
 
     /**
      * Constructor
@@ -47,7 +48,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public SQLiteDatabase getDataBase() {
         if (myDataBase == null)
-            myDataBase = super.getWritableDatabase();
+            openDataBase(SQLiteDatabase.OPEN_READWRITE);
         return myDataBase;
     }
 
@@ -145,43 +146,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public void execSQL(String sql, String table_name) {
+    public boolean execSQL(String sql, String table_name) {
         /* give table name for create tables */
-        if (table_name != null) {
-            try {
-                getDataBase().beginTransaction();
-                getDataBase().execSQL("drop table if exists " + table_name);
-                getDataBase().setTransactionSuccessful();
-                getDataBase().endTransaction();
-            } catch (Exception e) {
-                System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                Log.e("NutritionTrackerApp", "createTable", e);
-            }
-        }
-
         try {
             getDataBase().beginTransaction();
             getDataBase().execSQL(sql);
             getDataBase().setTransactionSuccessful();
             getDataBase().endTransaction();
-
-            if (table_name == person_profile_tab_name)
-                writeDailySTDTable(table_name);
-
+            return true;
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            Log.e("NutritionTrackerApp", "createTable", e);
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+            return false;
         }
     }
 
     public void createAllTables() {
         String sql;
-        String table_name;
-
         /* create daily std nutrition table */
-        table_name = "DAILY_STD_NUTR_TABLE";
-
-        sql = "create table " + table_name + " ( " +
+        String table_name = daily_std_tab_name;
+        sql = "create table if not exists " + daily_std_tab_name + " ( " +
                 "_status STRING , " +
                 " age_group STRING, " +
                 " \"205\" DOUBLE, " +
@@ -208,11 +192,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 " \"317\" DOUBLE, " +
                 " \"309\" DOUBLE " +
                 ");";
-        execSQL(sql, table_name);
+        if (execSQL(sql, table_name))
+            writeDailySTDTable(table_name);
 
          /* create person profile table */
-        table_name = "PERSON_PROFILE_TABLE";
-        sql = "create table " + table_name + " (" +
+        table_name = person_profile_tab_name;
+        sql = "create table if not exists " + table_name + " (" +
                 "_name STRING PRIMARY KEY, " +
                 "birth INT, " +
                 "gender STRING, " +
@@ -222,18 +207,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         execSQL(sql, table_name);
 
         /* create daily food log */
-        table_name = "DAILY_FOOD_LOG";
-        sql = "create table " + table_name + "  (" +
-                "_name STRING, " +
-                "date INT, " +
+        table_name = daily_food_log;
+        sql = "create table if not exists " + table_name + "  (" +
+                "_date INT, " +
                 "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);
 
         /* create weekly food log */
-        table_name = "WEEKLY_FOOD_LOG";
-        sql = "create table " + table_name + " (" +
-                "date INT, " +
+        table_name = weekly_food_log;
+        sql = "create table if not exists " + table_name + " (" +
+                "_date INT, " +
                 "food_id STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);

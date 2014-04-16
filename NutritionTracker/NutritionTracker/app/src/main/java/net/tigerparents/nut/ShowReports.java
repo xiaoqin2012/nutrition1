@@ -11,6 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import net.tigerparents.nut.nutritioninfo.NutritionData;
+import net.tigerparents.nut.nutritioninfo.NutritionInformation;
+import net.tigerparents.nut.nutritioninfo.NutritionReport;
+
 import java.util.ArrayList;
 
 
@@ -52,8 +56,8 @@ public class ShowReports extends Activity {
             Log.e("Invalid report type", report_type);
             return;
         }
-        ArrayList<NutritionData.NutritionInformation> report =
-                NutritionData.getNutritionInformationReport(type);
+        ArrayList<NutritionInformation> report =
+                NutritionReport.getNutritionInformationReport(type);
         ListView listview = (ListView) findViewById(R.id.reports_lv);
         String header_text = String.format("Report: %s", report_type);
         UIUtils.showNutritionInfo(this, listview, report, header_text);
