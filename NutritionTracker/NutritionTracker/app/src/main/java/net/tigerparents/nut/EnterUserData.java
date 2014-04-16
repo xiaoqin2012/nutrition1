@@ -1,12 +1,14 @@
 package net.tigerparents.nut;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -42,6 +44,9 @@ public class EnterUserData extends Activity {
         if (PersonProfile.profileEntered()) {
             readDefaultPersonProfile();
         }
+        _name.requestFocusFromTouch();
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void readDefaultPersonProfile() {
@@ -94,6 +99,15 @@ public class EnterUserData extends Activity {
         _weight.setValue(100); // should make women happy
     }
 
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            ((EditText) findViewById(R.id.name)).requestFocusFromTouch();
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                    InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
 
     public void userSave(View view) {
         String name = _name.getText().toString();
@@ -101,6 +115,9 @@ public class EnterUserData extends Activity {
         PersonProfile pp = new PersonProfile(name, year, _person_gender, _is_person_pregnant,
                 _is_person_lactating, _weight.getValue());
         pp.savePersonProfile();
+        ((InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                _name.getWindowToken(), 0);
         Intent intent = new Intent(this, StartScreen.class);
         startActivity(intent);
     }

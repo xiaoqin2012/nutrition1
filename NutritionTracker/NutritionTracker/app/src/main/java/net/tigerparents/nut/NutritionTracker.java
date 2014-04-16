@@ -22,6 +22,12 @@ public class NutritionTracker extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        if (PersonProfile.getPersonProfile() == null) {
+            // don't let them do anything without entering a profile
+            Intent intent = new Intent(this, EnterUserData.class);
+            startActivity(intent);
+        }
     }
 
     public void onBreakfastButton(View view) {

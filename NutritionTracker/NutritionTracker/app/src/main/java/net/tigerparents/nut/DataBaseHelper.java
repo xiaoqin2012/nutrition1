@@ -165,7 +165,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             getDataBase().setTransactionSuccessful();
             getDataBase().endTransaction();
 
-            if (table_name == person_profile_tab_name)
+            if (table_name == daily_std_tab_name)
                 writeDailySTDTable(table_name);
 
         } catch (Exception e) {
@@ -259,11 +259,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                 String[] words = line.split("\t");
 
+                if (words.length == 0) continue;
                 for (int i = 0; i < words.length; i++) {
                     contentValues.put("\'" + col_names[i] + "\'", words[i]);
                 }
                 System.out.print("test");
-                getDataBase().insert(table_name, null, contentValues);
+                if (contentValues != null)
+                    getDataBase().insert(table_name, null, contentValues);
             }
             getDataBase().setTransactionSuccessful();
             getDataBase().endTransaction();

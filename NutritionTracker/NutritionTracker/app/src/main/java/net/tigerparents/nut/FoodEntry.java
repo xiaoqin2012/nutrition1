@@ -1,11 +1,13 @@
 package net.tigerparents.nut;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.NumberPicker;
@@ -33,6 +35,11 @@ public class FoodEntry extends Activity {
         picker.setMinValue(1);
         picker.setMaxValue(64);
         picker.setValue(1);
+        food_tv.requestFocusFromTouch();
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+
     }
 
     public void onSave(View v) {
@@ -43,9 +50,22 @@ public class FoodEntry extends Activity {
         NutritionData new_data = new NutritionData(food_name, weight_in_ounces);
         new_data.save();
         Intent intent = new Intent(this, NutritionInformationDisplay.class);
+        ((InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                food_tv.getWindowToken(), 0);
         intent.putExtra(FOOD_NAME, food_tv.getText().toString());
         intent.putExtra(WEIGHT_IN_OUNCES, picker.getValue());
         startActivity(intent);
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            ((AutoCompleteTextView) findViewById(R.id.food_entry_tv)).requestFocusFromTouch();
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                    InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     @Override
