@@ -41,7 +41,8 @@ public class UIUtils {
     }
 
     public static void ShowKeyboard(Activity activity) {
-        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+        ((InputMethodManager) activity.getSystemService(
+                Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
                 InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 }
