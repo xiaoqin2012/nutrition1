@@ -12,23 +12,24 @@ import java.util.Calendar;
 public class PersonProfile {
     String name;
     int birth; //19751127
-    boolean gender;
+    String gender;
     boolean isPregnant;
     boolean isLactating;
     double weight;
     //calculated:
     int age;
-    String measure; //year or month all less than 1 year, treat as 1 year old.
     String ageGroup;
+    String status;
 
     public PersonProfile(String name, int birth, boolean gender, boolean isPregnant,
                          boolean isLactating, double weight) {
         this.name = name;
         this.birth = birth;
-        this.gender = gender;
+        this.gender = gender ? "male" : "female";
         this.isPregnant = isPregnant;
         this.isLactating = isLactating;
         this.weight = weight;
+        status = isLactating ? "lactation" : (isPregnant ? "pregnancy" : this.gender);
         setAgeInfo();
     }
 
@@ -61,11 +62,11 @@ public class PersonProfile {
                 String name = dbCursor.getString(0);
                 int birth_year = dbCursor.getInt(1);
                 String gender = dbCursor.getString(2);
-                String lactating_pregnancy_status = dbCursor.getString(3);
-                String[] status = lactating_pregnancy_status.split(":");
+                String status = dbCursor.getString(3);
                 double weight = dbCursor.getDouble(4);
-                return new PersonProfile(name, birth_year, gender != "female",
-                        status[0] == "yes", status[1] == "yes", weight);
+
+                return new PersonProfile(name, birth_year, gender == "male",
+                        status == "lactation", status == "pregnancy", weight);
             } else
                 return null;
         } catch (Exception e) {
@@ -91,7 +92,7 @@ public class PersonProfile {
     }
 
     public boolean getGender() {
-        return gender;
+        return gender == "male";
     }
 
     public double getWeight() {
@@ -107,14 +108,14 @@ public class PersonProfile {
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
         age = currYear - birth;
 
-        if (isBetween(age, 0, 3)) ageGroup = "1-3";
-        else if (isBetween(age, 4, 8)) ageGroup = "4-8";
-        else if (isBetween(age, 9, 13)) ageGroup = "9-13";
-        else if (isBetween(age, 14, 18)) ageGroup = "14-18";
-        else if (isBetween(age, 19, 30)) ageGroup = "19-30";
-        else if (isBetween(age, 31, 50)) ageGroup = "31-50";
-        else if (isBetween(age, 51, 70)) ageGroup = "51-70";
-        else ageGroup = ">70";
+        if (isBetween(age, 0, 3)) ageGroup = "3";
+        else if (isBetween(age, 4, 8)) ageGroup = "8";
+        else if (isBetween(age, 9, 13)) ageGroup = "13";
+        else if (isBetween(age, 14, 18)) ageGroup = "18";
+        else if (isBetween(age, 19, 30)) ageGroup = "30";
+        else if (isBetween(age, 31, 50)) ageGroup = "50";
+        else if (isBetween(age, 51, 70)) ageGroup = "70";
+        else ageGroup = "71";
         return;
     }
 
@@ -132,6 +133,6 @@ public class PersonProfile {
     }
 
     public String getStatus() {
-        return (isPregnant() ? "no" : "yes") + ":" + (isLactating() ? "no" : "yes");
+        return status;
     }
 }

@@ -34,7 +34,7 @@ public class NutritionData {
     public static int getTodayValue() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        int date = Calendar.getInstance().get(Calendar.DATE);
+        int date = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         return year * 10000 + month * 100 + date;
     }
 
@@ -55,17 +55,22 @@ public class NutritionData {
 
         try {
             int i = 0;
-            String sql = "select * from " + DataBaseHelper.food_nutr_tab_name + " where Long_Desc = \'" + food_name + "\';";
-            Cursor dbCursor = database.rawQuery(sql, null);
+            String sql1 = "select * from " + DataBaseHelper.food_nutr_tab_name + " where Long_Desc = \'" + food_name + "\';";
+            Cursor dbCursor = database.rawQuery(sql1, null);
             dbCursor.moveToFirst();
 
-            sql = "select * from " + DataBaseHelper.daily_std_tab_name +
+            String sql2 = "select * from " + DataBaseHelper.daily_std_tab_name +
                     " where " +
                     " _status = " + "\"" + profile.getStatus() + "\"" + " and " +
                     "age_group = " + "\"" + profile.getAgeGroup() + "\"" + ";";
-            Cursor stdValueCursor = database.rawQuery(sql, null);
 
+            Cursor stdValueCursor = database.rawQuery(sql2, null);
             stdValueCursor.moveToFirst();
+
+            String status = stdValueCursor.getString(0);
+            String age_group = stdValueCursor.getString(1);
+
+            System.out.print(status + age_group);
 
             for (i = 4; i < dbCursor.getColumnCount(); i++) {
                 String nuID = dbCursor.getColumnName(i);
@@ -85,7 +90,7 @@ public class NutritionData {
                 value *= weightInOunces * 28.35 / 100;
 
                 /* get the std value */
-                double stdValue = -1;
+                double stdValue = 100;
                 if (is_std_needed)
                     stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
 
@@ -102,13 +107,15 @@ public class NutritionData {
 
     /* std_dvi_table: (gender, status), age */
     public double getSTDValue(Cursor stdValueCursor, PersonProfile prof, String nuID, double value) {
-        String status = prof.getStatus();
-        String ageGroup = prof.getAgeGroup();
-        double stdValue = -1;
+        double stdValue = 100;
+        int count = stdValueCursor.getCount();
+        System.out.print(count);
 
         try {
             int stdIndex = stdValueCursor.getColumnIndex(nuID);
-            if (stdIndex < 0) return stdValue;
+            if (stdIndex < 0)
+                return stdValue;
+
             stdValue = stdValueCursor.getDouble(stdIndex);
 
             if (nuID.equals("203")) {//203 is protein
@@ -117,7 +124,7 @@ public class NutritionData {
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            Log.e("NutritionData.class", "getSTDValue()", e);
+            Log.e(e.getClass().getName(), e.getMessage(), e);
         }
 
         return stdValue;

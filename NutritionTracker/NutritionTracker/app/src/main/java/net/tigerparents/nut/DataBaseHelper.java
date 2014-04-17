@@ -159,6 +159,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.e(e.getClass().getName(), e.getMessage(), e);
             return false;
         }
+
     }
 
     public void createAllTables() {
@@ -192,8 +193,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 " \"317\" DOUBLE, " +
                 " \"309\" DOUBLE " +
                 ");";
-        if (execSQL(sql, table_name))
-            writeDailySTDTable(table_name);
+        execSQL(sql, table_name);
+        writeDailySTDTable(table_name);
+        readTable(table_name);
 
          /* create person profile table */
         table_name = person_profile_tab_name;
@@ -230,8 +232,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             BufferedReader br = new BufferedReader(new InputStreamReader(input));
             String line;
 
-            //getAllTables();
-
             getDataBase().beginTransaction();
 
             while ((line = br.readLine()) != null) {
@@ -243,6 +243,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                 String[] words = line.split("\t");
 
+                if (words.length == 0) continue;
                 for (int i = 0; i < words.length; i++) {
                     contentValues.put("\'" + col_names[i] + "\'", words[i]);
                 }
@@ -253,7 +254,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             getDataBase().endTransaction();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            Log.e("NutritionTrackerApp", "writeDailySTDTable", e);
+            Log.e(e.getClass().getName(), e.getMessage(), e);
         }
     }
 
@@ -271,5 +272,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             while (cursor.moveToNext());
         }
         cursor.close();
+    }
+
+    public void readTable(String table_name) {
+        String sql = "select * from " + table_name + ";";
+
+        try {
+            Cursor cursor = getDataBase().rawQuery(sql, null);
+
+            int count = cursor.getCount();
+
+            if (!cursor.moveToFirst()) {
+                System.out.print(count);
+            }
+
+            while (!cursor.isAfterLast()) {
+                String status = cursor.getString(0);
+                String age_group = cursor.getString(1);
+                double val1 = cursor.getDouble(2);
+                double val13 = cursor.getDouble(13);
+                cursor.moveToNext();
+            }
+        } catch (Exception e) {
+            Log.v(e.getClass().getName(), e.getMessage(), e);
+        }
+
+
     }
 }

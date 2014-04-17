@@ -1,6 +1,7 @@
 package net.tigerparents.nut.nutritioninfo;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +34,11 @@ public class NutritionReport {
             nu_info_list = array;
         } else {
             for (int i = 0; i < nu_info_list.size() && i < array.size(); i++) {
-                nu_info_list.get(i).weightValue += nu_info_list.get(i).weightValue;
+                if (i == 5) {
+                    double value = nu_info_list.get(i).weightValue;
+                    System.out.print(value);
+                }
+                nu_info_list.get(i).weightValue += array.get(i).weightValue;
             }
         }
     }
@@ -47,23 +52,28 @@ public class NutritionReport {
     }
 
     public void generateReport() {
-        int num_days = 1;
-        Cursor cursor = getDatabaseHelper().getWritableDatabase().rawQuery(sql_daily_log, null);
-        if (!cursor.moveToFirst())
-            return;
+        try {
+            Cursor cursor = getDatabaseHelper().getWritableDatabase().rawQuery(sql_daily_log, null);
+            if (!cursor.moveToFirst())
+                return;
 
-        while (!cursor.isAfterLast()) {
-            NutritionData nu_data = new NutritionData(cursor.getString(0), cursor.getInt(1));
-            if (nu_info_list == null)
-                add(nu_data.getNutritionInformation(true));
-            else add(nu_data.getNutritionInformation(false));
-            cursor.moveToNext();
+            while (!cursor.isAfterLast()) {
+                NutritionData nu_data = new NutritionData(cursor.getString(1), cursor.getInt(2));
+                if (nu_info_list == null)
+                    add(nu_data.getNutritionInformation(true));
+                else add(nu_data.getNutritionInformation(false));
+                cursor.moveToNext();
+            }
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.e(e.getClass().getName(), e.getMessage(), e);
         }
+
 
         for (int i = 0; i < nu_info_list.size(); i++) {
             double value = nu_info_list.get(i).getWeightValue();
             double stdValue = nu_info_list.get(i).getFDA();
-            nu_info_list.get(i).setPercentageFDA(value / stdValue / num_days);
+            nu_info_list.get(i).setPercentageFDA(value / stdValue / num_of_days);
         }
     }
 
@@ -85,15 +95,15 @@ public class NutritionReport {
 
             case WEEKLY:
                 int day_of_week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-                int begin_of_week = date - day_of_week;
-                condition = " _date >= " + begin_of_week + " and " + "_date < " + date + ";";
+                int begin_of_week = date - day_of_week + 1;
+                condition = " _date >= " + begin_of_week + " and " + "_date <= " + date + ";";
                 num_of_days = day_of_week;
                 break;
             case MONTHLY:
                 int year = Calendar.getInstance().get(Calendar.YEAR);
                 int month = Calendar.getInstance().get(Calendar.MONTH);
                 int begin_date = year * 10000 + month * 100;
-                condition = " _date >= " + begin_date + " and " + " _date < " + date + ";";
+                condition = " _date >= " + begin_date + " and " + " _date <= " + date + ";";
                 num_of_days = date - begin_date;
                 break;
             default:
