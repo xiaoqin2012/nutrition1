@@ -57,6 +57,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="NutritionTracker" />
         </activity>
+        <activity
+            android:name="net.tigerparents.nut.ExportDialog"
+            android:label="@string/title_activity_export_dialog"
+            android:parentActivityName="net.tigerparents.nut.StartScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="StartScreen" />
+        </activity>
+        <activity
+            android:name="net.tigerparents.nut.ExportDialogError"
+            android:label="@string/title_activity_export_dialog_error"
+            android:parentActivityName="net.tigerparents.nut.StartScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="StartScreen" />
+        </activity>
     </application>
 
 </manifest>

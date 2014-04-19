@@ -15,4 +15,8 @@
         <item>Weekly</item>
         <item>Monthly</item>
     </string-array>
+
+    <string name="title_activity_export_dialog">export_dialog</string>
+    <string name="title_activity_export_dialog_error">ExportDialogError</string>
+
 </resources>
