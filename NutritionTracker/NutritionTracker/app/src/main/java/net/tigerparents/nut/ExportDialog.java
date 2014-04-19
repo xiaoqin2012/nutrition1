@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 
 
 public class ExportDialog extends Activity {
+    public static final String EXPORT_FILE_NAME = "exportfile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class ExportDialog extends Activity {
 
             String new_intent_string = getIntent().getStringExtra("callback");
             Intent return_value = new Intent(new_intent_string);
-            return_value.putExtra("exportfile", exportFile.toURI());
+            return_value.putExtra(EXPORT_FILE_NAME, exportFile.toURI());
             if (getParent() == null) {
                 setResult(Activity.RESULT_OK, return_value);
             } else {
