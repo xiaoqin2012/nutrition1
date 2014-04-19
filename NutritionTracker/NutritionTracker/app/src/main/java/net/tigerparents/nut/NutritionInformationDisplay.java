@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import net.tigerparents.nut.nutritioninfo.NutritionData;
+import net.tigerparents.nut.nutritioninfo.NutritionInformation;
+
 import java.util.ArrayList;
 
 
@@ -22,7 +25,7 @@ public class NutritionInformationDisplay extends Activity {
         NutritionData nut_data =
                 NutritionData.getNutritionDataFor(intent.getStringExtra(FoodEntry.FOOD_NAME),
                         intent.getIntExtra(FoodEntry.WEIGHT_IN_OUNCES, 0));
-        ArrayList<NutritionData.NutritionInformation> info = nut_data.getNutritionInformation();
+        ArrayList<NutritionInformation> info = nut_data.getNutritionInformation(true);
 
         String header_text = String.format("Name: %s", intent.getStringExtra(FoodEntry.FOOD_NAME));
         UIUtils.showNutritionInfo(this, nv, info, header_text);

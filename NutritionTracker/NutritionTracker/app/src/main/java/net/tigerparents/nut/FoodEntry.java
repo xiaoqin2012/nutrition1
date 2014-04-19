@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.NumberPicker;
 
+import net.tigerparents.nut.nutritioninfo.NutritionData;
+
 import java.util.ArrayList;
 
 public class FoodEntry extends Activity {

@@ -11,6 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import net.tigerparents.nut.nutritioninfo.NutritionData;
+import net.tigerparents.nut.nutritioninfo.NutritionInformation;
+import net.tigerparents.nut.nutritioninfo.NutritionReport;
+
 import java.util.ArrayList;
 
 
@@ -25,38 +29,11 @@ public class ShowReports extends Activity {
                 R.array.report_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String report_type = (String) adapterView.getItemAtPosition(i);
-                Log.d("report_type selected:", report_type);
-                updateReport(report_type);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        spinner.setOnItemSelectedListener(new ReportSelectedListener(this));
     }
 
     void updateReport(String report_type) {
-        NutritionData.ReportTypes type;
-        if (report_type == "Daily") {
-            type = NutritionData.ReportTypes.DAILY;
-        } else if (report_type == "Weekly") {
-            type = NutritionData.ReportTypes.WEEKLY;
-        } else if (report_type == "Monthly") {
-            type = NutritionData.ReportTypes.MONTHLY;
-        } else {
-            Log.e("Invalid report type", report_type);
-            return;
-        }
-        ArrayList<NutritionData.NutritionInformation> report =
-                NutritionData.getNutritionInformationReport(type);
-        ListView listview = (ListView) findViewById(R.id.reports_lv);
-        String header_text = String.format("Report: %s", report_type);
-        UIUtils.showNutritionInfo(this, listview, report, header_text);
+
     }
 
     @Override
@@ -79,4 +56,39 @@ public class ShowReports extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class ReportSelectedListener implements AdapterView.OnItemSelectedListener {
+        Activity _activity;
+
+        ReportSelectedListener(Activity activity) {
+            _activity = activity;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            String report_type = (String) adapterView.getItemAtPosition(i);
+            Log.d("report_type selected:", report_type);
+            NutritionData.ReportTypes type;
+            if (report_type.equals("Daily")) {
+                type = NutritionData.ReportTypes.DAILY;
+            } else if (report_type.equals("Weekly")) {
+                type = NutritionData.ReportTypes.WEEKLY;
+            } else if (report_type.equals("Monthly")) {
+                type = NutritionData.ReportTypes.MONTHLY;
+            } else {
+                Log.e("Invalid report type", report_type);
+                return;
+            }
+            ArrayList<NutritionInformation> report =
+                    NutritionReport.getNutritionInformationReport(type);
+            ListView listview = (ListView) findViewById(R.id.reports_lv);
+            String header_text = String.format("Report: %s", report_type);
+            UIUtils.showNutritionInfo(_activity, listview, report, header_text);
+            updateReport(report_type);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    }
 }

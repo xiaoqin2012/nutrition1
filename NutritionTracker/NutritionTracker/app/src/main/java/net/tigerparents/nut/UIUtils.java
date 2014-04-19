@@ -1,11 +1,14 @@
 package net.tigerparents.nut;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import net.tigerparents.nut.nutritioninfo.NutritionInformation;
 
 import java.util.ArrayList;
 
@@ -14,11 +17,11 @@ import java.util.ArrayList;
  */
 public class UIUtils {
     public static void showNutritionInfo(Activity activity, ListView listview,
-                                         ArrayList<NutritionData.NutritionInformation> info,
+                                         ArrayList<NutritionInformation> info,
                                          String header_text) {
         ArrayList<String> listview_data = new ArrayList<String>();
         listview_data.add(header_text);
-        for (NutritionData.NutritionInformation i : info) {
+        for (NutritionInformation i : info) {
             String row_text = String.format("%s: %.2f%s %.1f",
                     i.getNutritionDescription(),
                     i.getWeightValue(),
