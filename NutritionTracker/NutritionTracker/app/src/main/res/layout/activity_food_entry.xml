@@ -45,7 +45,8 @@
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/weightPicker"
+        android:layout_alignStart="@+id/weightPicker"
         android:layout_centerVertical="true"
         android:onClick="onSave"
         android:text="Save" />

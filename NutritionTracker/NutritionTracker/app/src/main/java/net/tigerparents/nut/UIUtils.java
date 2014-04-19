@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -16,6 +17,8 @@ import java.util.ArrayList;
  * Created by piaw on 4/15/2014.
  */
 public class UIUtils {
+    private static ArrayList<String> s_foodNames;
+
     public static void showNutritionInfo(Activity activity, ListView listview,
                                          ArrayList<NutritionInformation> info,
                                          String header_text) {
@@ -44,5 +47,21 @@ public class UIUtils {
         ((InputMethodManager) activity.getSystemService(
                 Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
                 InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    public static ArrayList<String> memoizedGetFoodNames() {
+        if (s_foodNames == null)
+            s_foodNames = NutritionTrackerApp.getFoodNames();
+        return s_foodNames;
+    }
+
+    public static void setupTextViewWithFoodNames(Activity activity, AutoCompleteTextView food_tv) {
+        ArrayList<String> food_names = memoizedGetFoodNames();
+        String[] template = new String[10];
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,
+                        food_names.toArray(template));
+        food_tv.setAdapter(adapter);
+        food_tv.selectAll();
     }
 }
