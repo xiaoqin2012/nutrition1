@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="67dp"
+        android:layout_marginTop="20dp"
         android:onClick="onTrackerButtonClick"
         android:text="Nutrition Tracker" />
 
@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tracker_button"
         android:layout_alignStart="@+id/tracker_button"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/tracker_button"
+        android:layout_marginTop="65dp"
         android:onClick="onListButtonClick"
         android:text="Shopping List" />
 
@@ -33,9 +34,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/list_button"
-        android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/list_button"
-        android:layout_marginBottom="84dp"
+        android:layout_centerVertical="true"
         android:onClick="enterUserData"
         android:text="Enter User Data" />
+
+    <Button
+        android:id="@+id/onExportData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userdata"
+        android:layout_alignStart="@+id/userdata"
+        android:layout_below="@+id/userdata"
+        android:layout_marginTop="77dp"
+        android:text="Export Data" />
 </RelativeLayout>
