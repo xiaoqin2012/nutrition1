@@ -18,5 +18,6 @@
 
     <string name="title_activity_export_dialog">export_dialog</string>
     <string name="title_activity_export_dialog_error">ExportDialogError</string>
+    <string name="title_activity_shopping_entry">ShoppingEntry</string>
 
 </resources>

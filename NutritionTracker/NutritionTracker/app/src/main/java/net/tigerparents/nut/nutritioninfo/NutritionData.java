@@ -47,6 +47,10 @@ public class NutritionData {
         NutritionTrackerApp.getDatabaseHelper().execSQL(sql, table_name);
     }
 
+    public void saveShopping() {
+        // do save shopping
+    }
+
     public ArrayList<NutritionInformation> getNutritionInformation(boolean is_std_needed) {
         ArrayList<NutritionInformation> info = new ArrayList<NutritionInformation>();
         SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();

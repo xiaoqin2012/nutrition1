@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.NumberPicker;
 
 import net.tigerparents.nut.nutritioninfo.NutritionData;
-
-import java.util.ArrayList;
 
 public class FoodEntry extends Activity {
 
@@ -24,13 +21,7 @@ public class FoodEntry extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_entry);
         AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
-        ArrayList<String> food_names = NutritionTrackerApp.getFoodNames();
-        String[] template = new String[10];
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-                        food_names.toArray(template));
-        food_tv.setAdapter(adapter);
-        food_tv.selectAll();
+        UIUtils.setupTextViewWithFoodNames(this, food_tv);
         NumberPicker picker = (NumberPicker) findViewById(R.id.weightPicker);
         picker.setMinValue(1);
         picker.setMaxValue(64);

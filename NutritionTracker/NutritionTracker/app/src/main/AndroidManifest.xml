@@ -73,6 +73,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="StartScreen" />
         </activity>
+        <activity
+            android:name="net.tigerparents.nut.ShoppingEntry"
+            android:label="@string/title_activity_shopping_entry"
+            android:parentActivityName="net.tigerparents.nut.StartScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="StartScreen" />
+        </activity>
     </application>
 
 </manifest>
