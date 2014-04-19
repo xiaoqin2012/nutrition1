@@ -73,7 +73,7 @@ public class NutritionReport {
         for (int i = 0; i < nu_info_list.size(); i++) {
             double value = nu_info_list.get(i).getWeightValue();
             double stdValue = nu_info_list.get(i).getFDA();
-            nu_info_list.get(i).setPercentageFDA(value / stdValue / num_of_days);
+            nu_info_list.get(i).setPercentageFDA(value / stdValue / num_of_days * 100);
         }
     }
 

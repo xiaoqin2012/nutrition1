@@ -23,6 +23,7 @@ import java.io.OutputStream;
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    private static final int DATABASE_VERSION = 2;
     public static String food_nutr_tab_name = "FOOD_NUT_DATA";
     public static String nutr_desc_tab_name = "NUTR_DEF";
     public static String daily_std_tab_name = "DAILY_STD_NUTR_TABLE";
@@ -42,7 +43,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param context
      */
     public DataBaseHelper(Context context) {
-        super(context, DB_NAME, null, 1);
+        super(context, DB_NAME, null, DATABASE_VERSION);
         this.myContext = context;
     }
 
@@ -67,7 +68,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             //of your application so we are gonna be able to overwrite that database with our database.
             this.getReadableDatabase();
             try {
-                copyDataBase();
+                InputStream myInput = myContext.getAssets().open(DB_NAME);
+
+                // Path to the just created empty db
+                String outFileName = DB_PATH + DB_NAME;
+                //Open the empty db as the output stream
+                OutputStream myOutput = new FileOutputStream(outFileName);
+
+                copyDataBase(myInput, myOutput);
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
@@ -100,16 +108,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * system folder, from where it can be accessed and handled.
      * This is done by transfering bytestream.
      */
-    private void copyDataBase() throws IOException {
-
-        //Open your local db as the input stream
-        InputStream myInput = myContext.getAssets().open(DB_NAME);
-
-        // Path to the just created empty db
-        String outFileName = DB_PATH + DB_NAME;
-
-        //Open the empty db as the output stream
-        OutputStream myOutput = new FileOutputStream(outFileName);
+    private void copyDataBase(InputStream myInput, OutputStream myOutput) throws IOException {
 
         //transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
@@ -122,6 +121,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         myOutput.close();
         myInput.close();
     }
+
 
     public void openDataBase(int mode) throws SQLException {
         //Open the database
@@ -144,6 +144,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try {
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
+    }
+
+    public void copyLogs(String filename) {
+
+        SQLiteDatabase inDatabase = SQLiteDatabase.openDatabase(filename, null, SQLiteDatabase.OPEN_READONLY);
+        Cursor in_cursor = inDatabase.rawQuery("select * from " + daily_food_log + ";", null);
+
+    }
+
+    public void copyTable(String out_file_name, String table_name) {
+        try {
+            SQLiteDatabase inDatabase = SQLiteDatabase.openDatabase(out_file_name, null, SQLiteDatabase.OPEN_READONLY);
+            Cursor out_cursor = inDatabase.rawQuery("select * from " + table_name + ";", null);
+            if (out_cursor.moveToFirst()) {
+                return;
+            }
+
+            do {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(" _date", out_cursor.getInt(0));
+                contentValues.put("food_name" + "\'", out_cursor.getString(1));
+                contentValues.put("weight", out_cursor.getDouble(2));
+                getDataBase().insert(table_name, null, contentValues);
+            } while (out_cursor.moveToNext());
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
     }
 
     public boolean execSQL(String sql, String table_name) {
@@ -166,13 +197,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String sql;
         /* create daily std nutrition table */
         String table_name = daily_std_tab_name;
-        sql = "create table if not exists " + daily_std_tab_name + " ( " +
+        sql = "create table if not exists " + table_name + " ( " +
                 "_status STRING , " +
                 " age_group STRING, " +
-                " \"205\" DOUBLE, " +
                 " \"291\" DOUBLE, " +
                 " \"301\" DOUBLE, " +
-                " \"421\" DOUBLE, " +
+                " \"205\" DOUBLE, " +
                 " \"203\" DOUBLE, " +
                 " \"320\" DOUBLE, " +
                 " \"401\" DOUBLE, " +
@@ -182,12 +212,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 " \"405\" DOUBLE, " +
                 " \"406\" DOUBLE, " +
                 " \"415\" DOUBLE, " +
-                " \"432\" DOUBLE, " +
+                " \"417\" DOUBLE, " +
                 " \"418\" DOUBLE, " +
                 " \"312\" DOUBLE, " +
                 " \"002\" DOUBLE, " +
                 " \"303\" DOUBLE, " +
-                " \"315\" DOUBLE, " +
+                " \"304\" DOUBLE, " +
                 " \"003\" DOUBLE, " +
                 " \"305\" DOUBLE, " +
                 " \"317\" DOUBLE, " +
@@ -220,7 +250,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         table_name = weekly_food_log;
         sql = "create table if not exists " + table_name + " (" +
                 "_date INT, " +
-                "food_id STRING, " +
+                "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);
     }
@@ -296,7 +326,5 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             Log.v(e.getClass().getName(), e.getMessage(), e);
         }
-
-
     }
 }

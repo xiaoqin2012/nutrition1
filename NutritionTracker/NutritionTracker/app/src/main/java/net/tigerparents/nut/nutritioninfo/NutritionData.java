@@ -82,15 +82,16 @@ public class NutritionData {
                 Cursor nuCursor = database.rawQuery(sql_nu, null);
                 nuCursor.moveToFirst();
                 String nuName = nuCursor.getString(3) + " ";
-                if (nuID.endsWith("208")) {
+                if (nuID.equals("208")) {
                     nuName = "Calories";
                 }
-
                 double value = dbCursor.getDouble(i);
+                if (nuID.equals("312"))
+                    value *= 1000;
                 value *= weightInOunces * 28.35 / 100;
 
                 /* get the std value */
-                double stdValue = 100;
+                double stdValue = -100;
                 if (is_std_needed)
                     stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
 
@@ -107,7 +108,7 @@ public class NutritionData {
 
     /* std_dvi_table: (gender, status), age */
     public double getSTDValue(Cursor stdValueCursor, PersonProfile prof, String nuID, double value) {
-        double stdValue = 100;
+        double stdValue = -100;
         int count = stdValueCursor.getCount();
         System.out.print(count);
 
