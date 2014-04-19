@@ -86,15 +86,16 @@ public class NutritionData {
                     nuName = "Calories";
                 }
                 double value = dbCursor.getDouble(i);
-                if (nuID.equals("312"))
-                    value *= 1000;
+
                 value *= weightInOunces * 28.35 / 100;
 
                 /* get the std value */
                 double stdValue = -100;
-                if (is_std_needed)
+                if (is_std_needed) {
                     stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
-
+                    if (nuID.equals("312"))
+                        stdValue /= 1000;
+                }
                 NutritionInformation ni = new NutritionInformation(nuName, value,
                         nuCursor.getString(1), stdValue, value * 100 / stdValue);
                 info.add(ni);
