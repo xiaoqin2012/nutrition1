@@ -140,7 +140,7 @@ public class NutritionData {
     }
 
     public enum ReportTypes {
-        DAILY, WEEKLY, MONTHLY
+        DAILY, WEEKLY, MONTHLY, DAILY_SHOPPING, WEEKLY_SHOPPING, MONTHLY_SHOPPING
     }
 
 

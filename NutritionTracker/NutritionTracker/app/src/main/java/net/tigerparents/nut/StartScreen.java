@@ -64,6 +64,12 @@ public class StartScreen extends Activity {
         }
     }
 
+    public void shoppingReports(View view) {
+        Intent intent = new Intent(this, ShowReports.class);
+        intent.putExtra(ShowReports.REPORTS_PARENT, ShowReports.REPORTS_FOR_SHOPPING);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
