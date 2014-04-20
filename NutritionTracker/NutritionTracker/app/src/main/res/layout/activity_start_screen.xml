@@ -40,13 +40,25 @@
         android:text="Enter User Data" />
 
     <Button
+        android:id="@+id/shopping_reports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/onExportData"
+        android:layout_alignEnd="@+id/tracker_button"
+        android:layout_alignRight="@+id/tracker_button"
+        android:layout_marginBottom="27dp"
+        android:onClick="shoppingReports"
+        android:text="Shopping Reports" />
+
+
+    <Button
         android:id="@+id/onExportData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/userdata"
-        android:layout_alignStart="@+id/userdata"
-        android:layout_below="@+id/userdata"
-        android:layout_marginTop="77dp"
+        android:layout_alignLeft="@+id/shopping_reports"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/shopping_reports"
+        android:layout_marginBottom="62dp"
         android:onClick="onExportData"
         android:text="Export Data" />
 </RelativeLayout>
