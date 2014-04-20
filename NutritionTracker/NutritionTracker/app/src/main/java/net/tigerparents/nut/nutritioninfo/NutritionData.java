@@ -39,16 +39,19 @@ public class NutritionData {
     }
 
     public void save() {
+        save(NutritionTrackerApp.getDatabaseHelper().daily_food_log);
+    }
+
+    public void saveShopping() {
+        save(NutritionTrackerApp.getDatabaseHelper().weekly_food_log);
+    }
+
+    public void save(String table_name) {
         int date = getTodayValue();
-        String table_name = NutritionTrackerApp.getDatabaseHelper().daily_food_log;
         String sql = "insert into " + table_name + " (_date, food_name, weight) " +
                 "values ( " + date + ", " +
                 "\'" + food_name + "\', " + weightInOunces + ");";
         NutritionTrackerApp.getDatabaseHelper().execSQL(sql, table_name);
-    }
-
-    public void saveShopping() {
-        // do save shopping
     }
 
     public ArrayList<NutritionInformation> getNutritionInformation(boolean is_std_needed) {
