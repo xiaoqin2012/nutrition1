@@ -38,6 +38,21 @@ public class NutritionData {
         return year * 10000 + month * 100 + date;
     }
 
+    public static boolean isForShopping(ReportTypes type) {
+        switch (type) {
+            case DAILY:
+            case WEEKLY:
+            case MONTHLY:
+                return false;
+            case DAILY_SHOPPING:
+            case WEEKLY_SHOPPING:
+            case MONTHLY_SHOPPING:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public void save() {
         save(NutritionTrackerApp.getDatabaseHelper().daily_food_log);
     }
@@ -142,6 +157,4 @@ public class NutritionData {
     public enum ReportTypes {
         DAILY, WEEKLY, MONTHLY, DAILY_SHOPPING, WEEKLY_SHOPPING, MONTHLY_SHOPPING
     }
-
-
 }
