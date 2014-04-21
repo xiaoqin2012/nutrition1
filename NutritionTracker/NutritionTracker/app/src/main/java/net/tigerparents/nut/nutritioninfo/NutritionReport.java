@@ -30,6 +30,14 @@ public class NutritionReport {
 
     }
 
+    public static ArrayList<NutritionInformation> getRecentEntries(RecentEntriesType type) {
+        return null;
+    }
+
+    public static void deleteItem(RecentEntriesType type, String food_description) {
+        return;
+    }
+
     public static ArrayList<NutritionInformation> getNutritionInformationReport(NutritionData.ReportTypes type) {
         NutritionReport nu_report = new NutritionReport(type);
         return nu_report.getReport();
@@ -136,4 +144,6 @@ public class NutritionReport {
 
         sql_daily_log = sql + condition;
     }
+
+    public enum RecentEntriesType {FOOD_EATEN, SHOPPING_ENTRY}
 }

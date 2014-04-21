@@ -89,6 +89,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="StartScreen" />
         </activity>
+        <activity
+            android:name="net.tigerparents.nut.ShowRecentEntries"
+            android:label="@string/title_activity_show_recent_entries"
+            android:parentActivityName="net.tigerparents.nut.StartScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="StartScreen" />
+        </activity>
     </application>
 
 </manifest>
