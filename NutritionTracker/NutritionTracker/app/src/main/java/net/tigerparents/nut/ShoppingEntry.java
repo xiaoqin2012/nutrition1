@@ -60,6 +60,8 @@ public class ShoppingEntry extends Activity {
         UIUtils.HideKeyboard(this, food_tv);
         intent.putExtra(FoodEntry.FOOD_NAME, food_tv.getText().toString());
         intent.putExtra(FoodEntry.WEIGHT_IN_OUNCES, weight_in_ounces);
+        intent.putExtra(NutritionInformationDisplay.ENTRY_FROM,
+                NutritionInformationDisplay.SHOPPING_ENTRY);
         startActivity(intent);
     }
 
