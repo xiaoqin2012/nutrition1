@@ -3,12 +3,12 @@ package net.tigerparents.nut.nutritioninfo;
 import android.database.Cursor;
 import android.util.Log;
 
-import net.tigerparents.nut.DataBaseHelper;
+import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static net.tigerparents.nut.NutritionTrackerApp.getDatabaseHelper;
+import static net.tigerparents.nut.NutritionTrackerApp.getLogDatabaseHelper;
 
 /**
  * Created by xiaoqin on 4/16/2014.
@@ -24,8 +24,8 @@ public class NutritionReport {
     NutritionReport(NutritionData.ReportTypes type) {
         this.nu_info_list = null;
         this.type = type;
-        table_name = NutritionData.isForShopping(type) ? DataBaseHelper.weekly_food_log :
-                DataBaseHelper.daily_food_log;
+        table_name = NutritionData.isForShopping(type) ? LogDataBaseHelper.weekly_food_log :
+                LogDataBaseHelper.daily_food_log;
         buildQueryString();
 
     }
@@ -59,7 +59,7 @@ public class NutritionReport {
 
     public void generateReport() {
         try {
-            Cursor cursor = getDatabaseHelper().getWritableDatabase().rawQuery(sql_daily_log, null);
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
             if (!cursor.moveToFirst())
                 return;
 

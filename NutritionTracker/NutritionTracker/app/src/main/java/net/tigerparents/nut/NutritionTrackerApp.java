@@ -3,11 +3,10 @@ package net.tigerparents.nut;
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import java.io.IOException;
+import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
+import net.tigerparents.nut.DataBaseHelper.USDADataBaseHelper;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -16,29 +15,21 @@ import java.util.ArrayList;
  */
 public class NutritionTrackerApp extends Application {
     private static Context context;
-    private static DataBaseHelper db_helper;
+    private static USDADataBaseHelper usda_db_helper;
+    private static LogDataBaseHelper log_db_helper;
 
     public static void setupAppDatabase() {
-        db_helper = new DataBaseHelper(context);
-        try {
-            db_helper.createDataBase();
-        } catch (IOException e) {
-            Log.e("NutritionTrackerApp", "setupAppDatabase unable to create", e);
-            throw new Error("Unable to create database");
-        }
-
-        try {
-            db_helper.openDataBase(SQLiteDatabase.OPEN_READWRITE);
-        } catch (SQLException e) {
-            Log.e("NutritionTrackerApp", "setupAppDatabase unable to open", e);
-            throw e;
-        }
+        usda_db_helper = new USDADataBaseHelper(context);
+        log_db_helper = new LogDataBaseHelper(context);
     }
 
-    public static DataBaseHelper getDatabaseHelper() {
-        return db_helper;
+    public static USDADataBaseHelper getUSDADatabaseHelper() {
+        return usda_db_helper;
     }
 
+    public static LogDataBaseHelper getLogDatabaseHelper() {
+        return log_db_helper;
+    }
 
     public static Context getAppContext() {
         return NutritionTrackerApp.context;
@@ -51,7 +42,7 @@ public class NutritionTrackerApp extends Application {
 
         try {
             sql = "SELECT _id, Long_Desc FROM FOOD_NUT_DATA;";
-            Cursor cursor = db_helper.getDataBase().rawQuery(sql, null);
+            Cursor cursor = usda_db_helper.getDataBase().rawQuery(sql, null);
             if (cursor.moveToFirst()) {
                 do {
                     food_list.add(cursor.getString(1));

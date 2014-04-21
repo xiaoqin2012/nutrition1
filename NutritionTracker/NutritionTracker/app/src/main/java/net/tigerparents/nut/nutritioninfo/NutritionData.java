@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import net.tigerparents.nut.DataBaseHelper;
+import net.tigerparents.nut.DataBaseHelper.USDADataBaseHelper;
 import net.tigerparents.nut.NutritionTrackerApp;
 import net.tigerparents.nut.PersonProfile;
 
@@ -54,11 +54,11 @@ public class NutritionData {
     }
 
     public void save() {
-        save(NutritionTrackerApp.getDatabaseHelper().daily_food_log);
+        save(NutritionTrackerApp.getLogDatabaseHelper().daily_food_log);
     }
 
     public void saveShopping() {
-        save(NutritionTrackerApp.getDatabaseHelper().weekly_food_log);
+        save(NutritionTrackerApp.getLogDatabaseHelper().weekly_food_log);
     }
 
     public void save(String table_name) {
@@ -66,27 +66,28 @@ public class NutritionData {
         String sql = "insert into " + table_name + " (_date, food_name, weight) " +
                 "values ( " + date + ", " +
                 "\'" + food_name + "\', " + weightInOunces + ");";
-        NutritionTrackerApp.getDatabaseHelper().execSQL(sql, table_name);
+        NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, table_name);
     }
 
     public ArrayList<NutritionInformation> getNutritionInformation(boolean is_std_needed) {
         ArrayList<NutritionInformation> info = new ArrayList<NutritionInformation>();
-        SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
+        SQLiteDatabase usda_database = NutritionTrackerApp.getUSDADatabaseHelper().getDataBase();
+        SQLiteDatabase log_database = NutritionTrackerApp.getLogDatabaseHelper().getDataBase();
 
         Cursor nutrNameCursor;
 
         try {
             int i = 0;
-            String sql1 = "select * from " + DataBaseHelper.food_nutr_tab_name + " where Long_Desc = \'" + food_name + "\';";
-            Cursor dbCursor = database.rawQuery(sql1, null);
+            String sql1 = "select * from " + USDADataBaseHelper.food_nutr_tab_name + " where Long_Desc = \'" + food_name + "\';";
+            Cursor dbCursor = usda_database.rawQuery(sql1, null);
             dbCursor.moveToFirst();
 
-            String sql2 = "select * from " + DataBaseHelper.daily_std_tab_name +
+            String sql2 = "select * from " + USDADataBaseHelper.daily_std_tab_name +
                     " where " +
                     " _status = " + "\"" + profile.getStatus() + "\"" + " and " +
                     "age_group = " + "\"" + profile.getAgeGroup() + "\"" + ";";
 
-            Cursor stdValueCursor = database.rawQuery(sql2, null);
+            Cursor stdValueCursor = usda_database.rawQuery(sql2, null);
             stdValueCursor.moveToFirst();
 
             String status = stdValueCursor.getString(0);
@@ -98,10 +99,10 @@ public class NutritionData {
                 String nuID = dbCursor.getColumnName(i);
 
                 /* get nu name string from nutr_def table */
-                String sql_nu = "select * from " + DataBaseHelper.nutr_desc_tab_name +
+                String sql_nu = "select * from " + USDADataBaseHelper.nutr_desc_tab_name +
                         " where _Nutr_No = \'"
                         + nuID + "\';";
-                Cursor nuCursor = database.rawQuery(sql_nu, null);
+                Cursor nuCursor = usda_database.rawQuery(sql_nu, null);
                 nuCursor.moveToFirst();
                 String nuName = nuCursor.getString(3) + " ";
                 if (nuID.equals("208")) {
