@@ -11,29 +11,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|top"
-        android:onClick="onBreakfastButton"
-        android:text="Breakfast" />
-
-    <Button
-        android:id="@+id/lunch_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:text="Lunch" />
-
-    <Button
-        android:id="@+id/dinner_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|bottom"
-        android:text="Dinner" />
+        android:onClick="onEnterFoodEaten"
+        android:text="Enter Food Eaten" />
 
     <Button
         android:id="@+id/showReports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
+        android:layout_gravity="left|center_vertical"
         android:onClick="showReports"
         android:text="Reports" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:onClick="onShowRecentEntries"
+        android:text="Show Recent Entries" />
 
 </FrameLayout>

@@ -19,23 +19,13 @@
         android:text="Nutrition Tracker" />
 
     <Button
-        android:id="@+id/list_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tracker_button"
-        android:layout_alignStart="@+id/tracker_button"
-        android:layout_below="@+id/tracker_button"
-        android:layout_marginTop="65dp"
-        android:onClick="onShoppingClick"
-        android:text="Shopping List" />
-
-    <Button
         android:id="@+id/userdata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/list_button"
-        android:layout_alignStart="@+id/list_button"
-        android:layout_centerVertical="true"
+        android:layout_above="@+id/onExportData"
+        android:layout_alignLeft="@+id/tracker_button"
+        android:layout_alignStart="@+id/tracker_button"
+        android:layout_marginBottom="53dp"
         android:onClick="enterUserData"
         android:text="Enter User Data" />
 
@@ -43,12 +33,12 @@
         android:id="@+id/shopping_reports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/onExportData"
-        android:layout_alignEnd="@+id/tracker_button"
-        android:layout_alignRight="@+id/tracker_button"
-        android:layout_marginBottom="27dp"
-        android:onClick="shoppingReports"
-        android:text="Shopping Reports" />
+        android:layout_above="@+id/userdata"
+        android:layout_alignLeft="@+id/userdata"
+        android:layout_alignStart="@+id/userdata"
+        android:layout_marginBottom="48dp"
+        android:onClick="shoppingTracker"
+        android:text="Shopping Tracker" />
 
 
     <Button

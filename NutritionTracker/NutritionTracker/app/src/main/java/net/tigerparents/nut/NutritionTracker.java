@@ -30,7 +30,7 @@ public class NutritionTracker extends Activity {
         }
     }
 
-    public void onBreakfastButton(View view) {
+    public void onEnterFoodEaten(View view) {
         Intent intent = new Intent(this, FoodEntry.class);
         startActivity(intent);
     }
@@ -53,6 +53,11 @@ public class NutritionTracker extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void onShowRecentEntries(View view) {
+        return;
     }
 
     public void showReports(View view) {

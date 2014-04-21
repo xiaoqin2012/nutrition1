@@ -45,10 +45,6 @@ public class StartScreen extends Activity {
         startActivityForResult(intent, EXPORT_FILE_PATH);
     }
 
-    public void onShoppingClick(View view) {
-        Intent intent = new Intent(this, ShoppingEntry.class);
-        startActivity(intent);
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EXPORT_FILE_PATH) {
@@ -64,9 +60,8 @@ public class StartScreen extends Activity {
         }
     }
 
-    public void shoppingReports(View view) {
-        Intent intent = new Intent(this, ShowReports.class);
-        intent.putExtra(ShowReports.REPORTS_PARENT, ShowReports.REPORTS_FOR_SHOPPING);
+    public void shoppingTracker(View view) {
+        Intent intent = new Intent(this, ShoppingTracker.class);
         startActivity(intent);
     }
 

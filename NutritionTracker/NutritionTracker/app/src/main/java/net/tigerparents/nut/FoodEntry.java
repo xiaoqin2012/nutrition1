@@ -41,6 +41,8 @@ public class FoodEntry extends Activity {
         UIUtils.HideKeyboard(this, food_tv);
         intent.putExtra(FOOD_NAME, food_tv.getText().toString());
         intent.putExtra(WEIGHT_IN_OUNCES, picker.getValue());
+        intent.putExtra(NutritionInformationDisplay.ENTRY_FROM,
+                NutritionInformationDisplay.FOOD_ENTRY);
         startActivity(intent);
     }
 

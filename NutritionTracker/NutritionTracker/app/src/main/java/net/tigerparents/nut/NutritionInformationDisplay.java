@@ -3,6 +3,7 @@ package net.tigerparents.nut;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,10 @@ import java.util.ArrayList;
 
 
 public class NutritionInformationDisplay extends Activity {
+
+    public static final String ENTRY_FROM = "entry from";
+    public static final String FOOD_ENTRY = "food entry";
+    public static final String SHOPPING_ENTRY = "shopping entry";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,17 @@ public class NutritionInformationDisplay extends Activity {
     }
 
     public void enterMoreData(View view) {
-        Intent intent = new Intent(this, FoodEntry.class);
+        Intent intent;
+
+        String entry_from = getIntent().getStringExtra(ENTRY_FROM);
+        if (entry_from.equals(FOOD_ENTRY)) {
+            intent = new Intent(this, FoodEntry.class);
+        } else if (entry_from.equals(SHOPPING_ENTRY)) {
+            intent = new Intent(this, ShoppingEntry.class);
+        } else {
+            Log.e("NutritionInformationDisplay", "Unknown Entry From:" + entry_from);
+            return;
+        }
         startActivity(intent);
     }
 
