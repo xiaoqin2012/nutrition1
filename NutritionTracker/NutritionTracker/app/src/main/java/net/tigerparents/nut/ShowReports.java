@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class ShowReports extends Activity {
 
     public static final String REPORTS_PARENT = "reports_parent";
-    ;
     public static final String REPORTS_FOR_EATING = "eating";
     public static final String REPORTS_FOR_SHOPPING = "shopping";
     EntryType _entry_type;
@@ -87,7 +86,12 @@ public class ShowReports extends Activity {
         public void findAndShowReports(String report_type, NutritionData.ReportTypes type) {
             ArrayList<NutritionInformation> report =
                     NutritionReport.getNutritionInformationReport(type);
-            if (report == null) return; // invalid report
+            if (report == null) {
+                // dummy up bogus data
+                NutritionInformation dummy = new NutritionInformation();
+                report = new ArrayList<NutritionInformation>();
+                report.add(dummy);
+            }
             ListView listview = (ListView) findViewById(R.id.reports_lv);
             String header_text = String.format("Report: %s", report_type);
             UIUtils.showNutritionInfo(_activity, listview, report, header_text);
