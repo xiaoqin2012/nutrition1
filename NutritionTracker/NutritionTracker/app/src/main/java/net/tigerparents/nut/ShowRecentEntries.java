@@ -34,7 +34,7 @@ public class ShowRecentEntries extends Activity {
         Intent intent = getIntent();
         String recent_entries_type = intent.getStringExtra(RECENT_ENTRIES_TYPE);
         if (recent_entries_type.equals(SHOPPING_TYPE)) {
-            _entries_type = NutritionData.ReportTypes.DAILY_SHOPPING;
+            _entries_type = NutritionData.ReportTypes.WEEKLY_SHOPPING;
         } else if (recent_entries_type.equals(EATING_TYPE)) {
             _entries_type = NutritionData.ReportTypes.DAILY;
         } else {

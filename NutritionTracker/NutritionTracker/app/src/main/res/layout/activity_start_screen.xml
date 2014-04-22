@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:onClick="onTrackerButtonClick"
         android:text="Nutrition Tracker" />
 
@@ -22,10 +22,9 @@
         android:id="@+id/userdata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/onExportData"
-        android:layout_alignLeft="@+id/tracker_button"
-        android:layout_alignStart="@+id/tracker_button"
-        android:layout_marginBottom="53dp"
+        android:layout_above="@+id/adView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp"
         android:onClick="enterUserData"
         android:text="Enter User Data" />
 
@@ -33,15 +32,15 @@
         android:id="@+id/shopping_reports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/userdata"
-        android:layout_alignLeft="@+id/userdata"
-        android:layout_alignStart="@+id/userdata"
-        android:layout_marginBottom="48dp"
+        android:layout_alignEnd="@+id/tracker_button"
+        android:layout_alignRight="@+id/tracker_button"
+        android:layout_below="@+id/tracker_button"
+        android:layout_marginTop="92dp"
         android:onClick="shoppingTracker"
         android:text="Shopping Tracker" />
 
 
-    <Button
+    Button
         android:id="@+id/onExportData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,4 +50,15 @@
         android:layout_marginBottom="62dp"
         android:onClick="onExportData"
         android:text="Export Data" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="34dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3680019745466927/1299436292" />
 </RelativeLayout>
