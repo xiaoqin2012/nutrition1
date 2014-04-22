@@ -2,7 +2,8 @@ package net.tigerparents.nut.DataBaseHelper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
+import net.tigerparents.nut.Log;
 
 /**
  * Created by xiaoqin on 4/20/2014.

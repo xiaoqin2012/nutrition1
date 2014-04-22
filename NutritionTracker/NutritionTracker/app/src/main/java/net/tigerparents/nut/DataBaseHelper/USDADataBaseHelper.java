@@ -3,7 +3,8 @@ package net.tigerparents.nut.DataBaseHelper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
+
+import net.tigerparents.nut.Log;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
