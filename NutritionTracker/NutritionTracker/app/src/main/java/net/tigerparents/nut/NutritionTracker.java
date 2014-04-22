@@ -57,7 +57,9 @@ public class NutritionTracker extends Activity {
 
 
     public void onShowRecentEntries(View view) {
-        return;
+        Intent intent = new Intent(this, ShowRecentEntries.class);
+        intent.putExtra(ShowRecentEntries.RECENT_ENTRIES_TYPE, ShowRecentEntries.EATING_TYPE);
+        startActivity(intent);
     }
 
     public void showReports(View view) {

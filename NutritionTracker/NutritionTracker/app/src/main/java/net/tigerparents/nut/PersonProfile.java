@@ -36,7 +36,7 @@ public class PersonProfile {
     public static boolean profileEntered() {
         String sql = "select * from PERSON_PROFILE_TABLE";
         try {
-            Cursor dbCursor = NutritionTrackerApp.getDatabaseHelper().getDataBase().rawQuery(sql, null);
+            Cursor dbCursor = NutritionTrackerApp.getLogDatabaseHelper().getDataBase().rawQuery(sql, null);
             if (dbCursor.moveToFirst() && dbCursor != null) {
                 return true;
             }
@@ -55,7 +55,7 @@ public class PersonProfile {
         try {
         /* query personprofile database by default, using the first one */
             String sql = "select * from PERSON_PROFILE_TABLE";
-            SQLiteDatabase database = NutritionTrackerApp.getDatabaseHelper().getDataBase();
+            SQLiteDatabase database = NutritionTrackerApp.getLogDatabaseHelper().getDataBase();
 
             Cursor dbCursor = database.rawQuery(sql, null);
             if (dbCursor.moveToFirst() && dbCursor != null) {
@@ -129,7 +129,7 @@ public class PersonProfile {
                 +weight +
                 " ); ";
 
-        NutritionTrackerApp.getDatabaseHelper().execSQL(sql, null);
+        NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, null);
     }
 
     public String getStatus() {

@@ -48,7 +48,9 @@ public class ShoppingTracker extends Activity {
         startActivity(intent);
     }
 
-    public void onShowRecenEntries(View view) {
-        // empty
+    public void onShowRecentEntries(View view) {
+        Intent intent = new Intent(this, ShowRecentEntries.class);
+        intent.putExtra(ShowRecentEntries.RECENT_ENTRIES_TYPE, ShowRecentEntries.SHOPPING_TYPE);
+        startActivity(intent);
     }
 }

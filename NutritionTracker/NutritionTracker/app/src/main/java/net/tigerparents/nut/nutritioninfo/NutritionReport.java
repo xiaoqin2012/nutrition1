@@ -3,10 +3,12 @@ package net.tigerparents.nut.nutritioninfo;
 import android.database.Cursor;
 import android.util.Log;
 
+import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static net.tigerparents.nut.NutritionTrackerApp.getDatabaseHelper;
+import static net.tigerparents.nut.NutritionTrackerApp.getLogDatabaseHelper;
 
 /**
  * Created by xiaoqin on 4/16/2014.
@@ -17,24 +19,65 @@ public class NutritionReport {
 
     String sql_daily_log;
     int num_of_days;
+    String table_name = null;
 
     NutritionReport(NutritionData.ReportTypes type) {
         this.nu_info_list = null;
         this.type = type;
+        table_name = NutritionData.isForShopping(type) ? LogDataBaseHelper.weekly_food_log :
+                LogDataBaseHelper.daily_food_log;
         buildQueryString();
     }
 
-    public static ArrayList<NutritionInformation> getRecentEntries(RecentEntriesType type) {
-        return null;
+    public static ArrayList<FoodLogEntry> getRecentEntries(NutritionData.ReportTypes type) {
+        NutritionReport log_report = new NutritionReport(type);
+        return log_report.getLog();
     }
 
-    public static void deleteItem(RecentEntriesType type, String food_description) {
-        return;
+    public static void deleteItem(NutritionData.ReportTypes type, String food_description) {
+        try {
+            String table_name = new String();
+            int date = NutritionData.getTodayValue();
+            switch (type) {
+                case DAILY:
+                    table_name = LogDataBaseHelper.daily_food_log;
+                    break;
+                case DAILY_SHOPPING:
+                    table_name = LogDataBaseHelper.weekly_food_log;
+                    break;
+                default:
+                    break;
+            }
+
+            getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
+                    new String[]{Integer.toString(date), food_description});
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
     }
 
     public static ArrayList<NutritionInformation> getNutritionInformationReport(NutritionData.ReportTypes type) {
         NutritionReport nu_report = new NutritionReport(type);
         return nu_report.getReport();
+    }
+
+    public ArrayList<FoodLogEntry> getLog() {
+        ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
+        try {
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
+            if (!cursor.moveToFirst())
+                return food_log;
+
+            while (!cursor.isAfterLast()) {
+                FoodLogEntry log_entry = new FoodLogEntry(cursor.getString(1), cursor.getInt(2), type);
+                food_log.add(log_entry);
+                cursor.moveToNext();
+            }
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
+
+        return food_log;
     }
 
     public void add(ArrayList<NutritionInformation> array) {
@@ -52,18 +95,10 @@ public class NutritionReport {
     }
 
     public ArrayList<NutritionInformation> getReport() {
-        if (nu_info_list == null) {
-            generateReport();
-        }
-
-        return nu_info_list;
-    }
-
-    public void generateReport() {
         try {
-            Cursor cursor = getDatabaseHelper().getWritableDatabase().rawQuery(sql_daily_log, null);
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
             if (!cursor.moveToFirst())
-                return;
+                return nu_info_list;
 
             while (!cursor.isAfterLast()) {
                 NutritionData nu_data = new NutritionData(cursor.getString(1), cursor.getInt(2));
@@ -73,20 +108,36 @@ public class NutritionReport {
                 cursor.moveToNext();
             }
         } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             Log.e(e.getClass().getName(), e.getMessage(), e);
         }
-
 
         for (int i = 0; i < nu_info_list.size(); i++) {
             double value = nu_info_list.get(i).getWeightValue();
             double stdValue = nu_info_list.get(i).getFDA();
-            nu_info_list.get(i).setPercentageFDA(value / stdValue / num_of_days * 100);
+            int real_days = getRealDays(type, num_of_days);
+            nu_info_list.get(i).setPercentageFDA(value / (stdValue * real_days) * 100);
+        }
+
+        return nu_info_list;
+    }
+
+    public int getRealDays(NutritionData.ReportTypes type, int num_of_days) {
+        switch (type) {
+            case DAILY:
+            case WEEKLY:
+            case MONTHLY:
+            case DAILY_SHOPPING:
+                return num_of_days;
+            case WEEKLY_SHOPPING:
+                return 7;
+            case MONTHLY_SHOPPING:
+                return Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+            default:
+                return 0;
         }
     }
 
     public void buildQueryString() {
-        String table_name = getDatabaseHelper().daily_food_log;
         String sql = "select * from " + table_name + " where ";
         String condition = null;
 
@@ -94,6 +145,7 @@ public class NutritionReport {
 
         switch (type) {
             case DAILY:
+            case DAILY_SHOPPING:
             /* query database, get all logs food name, weight */
             /* for each food, call get nutrition_data(food_name, weight).getNutritionInformation
             *  add it to sum value*/
@@ -102,12 +154,14 @@ public class NutritionReport {
                 break;
 
             case WEEKLY:
+            case WEEKLY_SHOPPING:
                 int day_of_week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
                 int begin_of_week = date - day_of_week + 1;
                 condition = " _date >= " + begin_of_week + " and " + "_date <= " + date + ";";
                 num_of_days = day_of_week;
                 break;
             case MONTHLY:
+            case MONTHLY_SHOPPING:
                 int year = Calendar.getInstance().get(Calendar.YEAR);
                 int month = Calendar.getInstance().get(Calendar.MONTH);
                 int begin_date = year * 10000 + month * 100;
@@ -121,5 +175,35 @@ public class NutritionReport {
         sql_daily_log = sql + condition;
     }
 
-    public enum RecentEntriesType {FOOD_EATEN, SHOPPING_ENTRY}
+    public class FoodLogEntry {
+        String food_name;
+        double weight;
+        String weightUnit;
+
+        FoodLogEntry(String food_name, double weight, NutritionData.ReportTypes type) {
+            this.food_name = food_name;
+            switch (type) {
+                case DAILY:
+                    this.weight = weight;
+                    this.weightUnit = new String("ounce");
+                    break;
+                case DAILY_SHOPPING:
+                    this.weightUnit = new String("lb");
+                    this.weight = weight / 16;
+            }
+        }
+
+        public String getFoodName() {
+            return food_name;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public String getWeightUnit() {
+            return weightUnit;
+        }
+    }
+
 }
