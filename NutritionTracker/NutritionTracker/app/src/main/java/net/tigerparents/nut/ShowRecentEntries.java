@@ -13,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import net.tigerparents.nut.nutritioninfo.NutritionInformation;
+import net.tigerparents.nut.nutritioninfo.NutritionData;
 import net.tigerparents.nut.nutritioninfo.NutritionReport;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class ShowRecentEntries extends Activity {
     public static final String SHOPPING_TYPE = "shopping";
     public static final String EATING_TYPE = "eating";
 
-    NutritionReport.RecentEntriesType _entries_type;
+    NutritionData.ReportTypes _entries_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,31 +34,33 @@ public class ShowRecentEntries extends Activity {
         Intent intent = getIntent();
         String recent_entries_type = intent.getStringExtra(RECENT_ENTRIES_TYPE);
         if (recent_entries_type.equals(SHOPPING_TYPE)) {
-            _entries_type = NutritionReport.RecentEntriesType.SHOPPING_ENTRY;
+            _entries_type = NutritionData.ReportTypes.DAILY_SHOPPING;
         } else if (recent_entries_type.equals(EATING_TYPE)) {
-            _entries_type = NutritionReport.RecentEntriesType.FOOD_EATEN;
+            _entries_type = NutritionData.ReportTypes.DAILY;
         } else {
             Log.e("ShowRecentEntries", "Unknown Recent Entries Type:" + recent_entries_type);
             assert (false); // crash the program
         }
         final ListView lv = (ListView) findViewById(R.id.recentListView);
         lv.setOnItemClickListener(new ItemClickListener(this));
+        findAndShowRecentEntries(_entries_type);
     }
 
     public void deleteItem(String food_description) {
         NutritionReport.deleteItem(_entries_type, food_description);
+        findAndShowRecentEntries(_entries_type);
     }
 
-    public void findAndShowRecentEntries(NutritionReport.RecentEntriesType type) {
-        ArrayList<NutritionInformation> entries =
+    public void findAndShowRecentEntries(NutritionData.ReportTypes type) {
+        ArrayList<NutritionReport.FoodLogEntry> entries =
                 NutritionReport.getRecentEntries(type);
         if (entries == null) return; // invalid report
         ListView listview = (ListView) findViewById(R.id.recentListView);
         ArrayList<String> listview_data = new ArrayList<String>();
-        for (NutritionInformation i : entries) {
+        for (NutritionReport.FoodLogEntry i : entries) {
             String row_text = String.format("%s: %.2f%s",
-                    i.getNutritionDescription(),
-                    i.getWeightValue(),
+                    i.getFoodName(),
+                    i.getWeight(),
                     i.getWeightUnit());
             listview_data.add(row_text);
         }

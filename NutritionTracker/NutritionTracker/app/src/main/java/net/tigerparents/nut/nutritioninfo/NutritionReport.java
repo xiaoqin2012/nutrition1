@@ -27,20 +27,57 @@ public class NutritionReport {
         table_name = NutritionData.isForShopping(type) ? LogDataBaseHelper.weekly_food_log :
                 LogDataBaseHelper.daily_food_log;
         buildQueryString();
-
     }
 
-    public static ArrayList<NutritionInformation> getRecentEntries(RecentEntriesType type) {
-        return null;
+    public static ArrayList<FoodLogEntry> getRecentEntries(NutritionData.ReportTypes type) {
+        NutritionReport log_report = new NutritionReport(type);
+        return log_report.getLog();
     }
 
-    public static void deleteItem(RecentEntriesType type, String food_description) {
-        return;
+    public static void deleteItem(NutritionData.ReportTypes type, String food_description) {
+        try {
+            String table_name = new String();
+            int date = NutritionData.getTodayValue();
+            switch (type) {
+                case DAILY:
+                    table_name = LogDataBaseHelper.daily_food_log;
+                    break;
+                case DAILY_SHOPPING:
+                    table_name = LogDataBaseHelper.weekly_food_log;
+                    break;
+                default:
+                    break;
+            }
+
+            getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
+                    new String[]{Integer.toString(date), food_description});
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
     }
 
     public static ArrayList<NutritionInformation> getNutritionInformationReport(NutritionData.ReportTypes type) {
         NutritionReport nu_report = new NutritionReport(type);
         return nu_report.getReport();
+    }
+
+    public ArrayList<FoodLogEntry> getLog() {
+        ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
+        try {
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
+            if (!cursor.moveToFirst())
+                return food_log;
+
+            while (!cursor.isAfterLast()) {
+                FoodLogEntry log_entry = new FoodLogEntry(cursor.getString(1), cursor.getInt(2), type);
+                food_log.add(log_entry);
+                cursor.moveToNext();
+            }
+        } catch (Exception e) {
+            Log.e(e.getClass().getName(), e.getMessage(), e);
+        }
+
+        return food_log;
     }
 
     public void add(ArrayList<NutritionInformation> array) {
@@ -58,18 +95,10 @@ public class NutritionReport {
     }
 
     public ArrayList<NutritionInformation> getReport() {
-        if (nu_info_list == null) {
-            generateReport();
-        }
-
-        return nu_info_list;
-    }
-
-    public void generateReport() {
         try {
             Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
             if (!cursor.moveToFirst())
-                return;
+                return nu_info_list;
 
             while (!cursor.isAfterLast()) {
                 NutritionData nu_data = new NutritionData(cursor.getString(1), cursor.getInt(2));
@@ -79,7 +108,6 @@ public class NutritionReport {
                 cursor.moveToNext();
             }
         } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             Log.e(e.getClass().getName(), e.getMessage(), e);
         }
 
@@ -89,6 +117,8 @@ public class NutritionReport {
             int real_days = getRealDays(type, num_of_days);
             nu_info_list.get(i).setPercentageFDA(value / (stdValue * real_days) * 100);
         }
+
+        return nu_info_list;
     }
 
     public int getRealDays(NutritionData.ReportTypes type, int num_of_days) {
@@ -145,5 +175,35 @@ public class NutritionReport {
         sql_daily_log = sql + condition;
     }
 
-    public enum RecentEntriesType {FOOD_EATEN, SHOPPING_ENTRY}
+    public class FoodLogEntry {
+        String food_name;
+        double weight;
+        String weightUnit;
+
+        FoodLogEntry(String food_name, double weight, NutritionData.ReportTypes type) {
+            this.food_name = food_name;
+            switch (type) {
+                case DAILY:
+                    this.weight = weight;
+                    this.weightUnit = new String("ounce");
+                    break;
+                case DAILY_SHOPPING:
+                    this.weightUnit = new String("lb");
+                    this.weight = weight / 16;
+            }
+        }
+
+        public String getFoodName() {
+            return food_name;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public String getWeightUnit() {
+            return weightUnit;
+        }
+    }
+
 }
