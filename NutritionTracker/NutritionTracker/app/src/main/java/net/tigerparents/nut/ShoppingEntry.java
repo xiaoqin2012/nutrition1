@@ -27,7 +27,6 @@ public class ShoppingEntry extends Activity {
         ounce_picker.setMaxValue(15);
         pound_picker.setMaxValue(100);
         food_tv.requestFocusFromTouch();
-        UIUtils.ShowAds(this);
         UIUtils.ShowKeyboard(this);
     }
 
