@@ -1,9 +1,9 @@
 package net.tigerparents.nut.nutritioninfo;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
+import net.tigerparents.nut.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;

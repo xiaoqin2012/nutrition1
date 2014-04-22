@@ -2,9 +2,9 @@ package net.tigerparents.nut.nutritioninfo;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import net.tigerparents.nut.DataBaseHelper.USDADataBaseHelper;
+import net.tigerparents.nut.Log;
 import net.tigerparents.nut.NutritionTrackerApp;
 import net.tigerparents.nut.PersonProfile;
 
