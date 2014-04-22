@@ -7,7 +7,6 @@ import android.database.Cursor;
 import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
 import net.tigerparents.nut.DataBaseHelper.USDADataBaseHelper;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +37,6 @@ public class NutritionTrackerApp extends Application {
     public static ArrayList<String> getFoodNames() {
         ArrayList<String> food_list = new ArrayList<String>();
         String sql;
-        ResultSet rs;
 
         try {
             sql = "SELECT _id, Long_Desc FROM FOOD_NUT_DATA;";
@@ -46,7 +44,8 @@ public class NutritionTrackerApp extends Application {
             if (cursor.moveToFirst()) {
                 do {
                     String food_name = cursor.getString(1);
-                    if (!food_name.startsWith("Babyfood") && !food_name.startsWith("Infant"))
+                    if (food_name != null && !food_name.startsWith("Babyfood")
+                            && !food_name.startsWith("Infant"))
                         food_list.add(cursor.getString(1));
                 } while (cursor.moveToNext());
             }
