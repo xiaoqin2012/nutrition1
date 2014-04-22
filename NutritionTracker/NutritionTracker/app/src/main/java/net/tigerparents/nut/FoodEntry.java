@@ -27,8 +27,6 @@ public class FoodEntry extends Activity {
         picker.setMaxValue(64);
         picker.setValue(1);
         food_tv.requestFocusFromTouch();
-        UIUtils.ShowAds(this);
-
         UIUtils.ShowKeyboard(this);
     }
 
@@ -51,9 +49,12 @@ public class FoodEntry extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
+        AutoCompleteTextView tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
         if (hasFocus) {
-            ((AutoCompleteTextView) findViewById(R.id.food_entry_tv)).requestFocusFromTouch();
+            tv.requestFocusFromTouch();
             UIUtils.ShowKeyboard(this);
+        } else {
+            UIUtils.HideKeyboard(this, tv);
         }
     }
 
