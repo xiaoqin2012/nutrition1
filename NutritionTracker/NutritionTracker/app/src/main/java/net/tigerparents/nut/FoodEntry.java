@@ -27,6 +27,8 @@ public class FoodEntry extends Activity {
         picker.setMaxValue(64);
         picker.setValue(1);
         food_tv.requestFocusFromTouch();
+        UIUtils.ShowAds(this);
+
         UIUtils.ShowKeyboard(this);
     }
 
