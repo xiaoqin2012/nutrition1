@@ -9,9 +9,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
 import net.tigerparents.nut.nutritioninfo.NutritionInformation;
 
 import java.util.ArrayList;
@@ -66,12 +63,5 @@ public class UIUtils {
                         food_names.toArray(template));
         food_tv.setAdapter(adapter);
         food_tv.selectAll();
-    }
-
-    public static void ShowAds(Activity activity) {
-        // Look up the AdView as a resource and load a request.
-        AdView adView = (AdView) activity.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
     }
 }
