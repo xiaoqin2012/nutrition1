@@ -42,9 +42,12 @@ public class ShoppingEntry extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
+        AutoCompleteTextView tv = (AutoCompleteTextView) findViewById(R.id.shoppingTextView);
         if (hasFocus) {
-            ((AutoCompleteTextView) findViewById(R.id.shoppingTextView)).requestFocusFromTouch();
+            tv.requestFocusFromTouch();
             UIUtils.ShowKeyboard(this);
+        } else {
+            UIUtils.HideKeyboard(this, tv);
         }
     }
 
