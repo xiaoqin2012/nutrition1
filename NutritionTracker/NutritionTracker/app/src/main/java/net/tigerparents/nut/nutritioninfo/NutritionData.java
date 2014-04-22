@@ -105,6 +105,7 @@ public class NutritionData {
                 Cursor nuCursor = usda_database.rawQuery(sql_nu, null);
                 nuCursor.moveToFirst();
                 String nuName = nuCursor.getString(3) + " ";
+
                 if (nuID.equals("208")) {
                     nuName = "Calories";
                 }
@@ -114,11 +115,12 @@ public class NutritionData {
 
                 /* get the std value */
                 double stdValue = -100;
-                if (is_std_needed) {
-                    stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
-                    if (nuID.equals("312"))
-                        stdValue /= 1000;
-                }
+                stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
+                if (stdValue < 0) continue;
+
+                if (nuID.equals("312"))
+                    stdValue /= 1000;
+
                 NutritionInformation ni = new NutritionInformation(nuName, value,
                         nuCursor.getString(1), stdValue, value * 100 / stdValue);
                 info.add(ni);

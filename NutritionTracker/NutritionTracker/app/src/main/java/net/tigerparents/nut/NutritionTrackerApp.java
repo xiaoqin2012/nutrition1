@@ -45,7 +45,9 @@ public class NutritionTrackerApp extends Application {
             Cursor cursor = usda_db_helper.getDataBase().rawQuery(sql, null);
             if (cursor.moveToFirst()) {
                 do {
-                    food_list.add(cursor.getString(1));
+                    String food_name = cursor.getString(1);
+                    if (!food_name.startsWith("Babyfood"))
+                        food_list.add(cursor.getString(1));
                 } while (cursor.moveToNext());
             }
 
