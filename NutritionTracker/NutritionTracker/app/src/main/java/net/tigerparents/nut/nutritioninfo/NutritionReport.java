@@ -40,17 +40,22 @@ public class NutritionReport {
             int date = NutritionData.getTodayValue();
             switch (type) {
                 case DAILY:
+                case WEEKLY:
+                case MONTHLY:
                     table_name = LogDataBaseHelper.daily_food_log;
                     break;
                 case DAILY_SHOPPING:
+                case WEEKLY_SHOPPING:
+                case MONTHLY_SHOPPING:
                     table_name = LogDataBaseHelper.weekly_food_log;
                     break;
                 default:
                     break;
             }
 
+            String[] parts = food_description.split(" ", 2);
             getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
-                    new String[]{Integer.toString(date), food_description});
+                    new String[]{parts[0], parts[1]});
         } catch (Exception e) {
             Log.e(e.getClass().getName(), e.getMessage(), e);
         }
@@ -69,7 +74,10 @@ public class NutritionReport {
                 return food_log;
 
             while (!cursor.isAfterLast()) {
-                FoodLogEntry log_entry = new FoodLogEntry(cursor.getString(1), cursor.getInt(2), type);
+                FoodLogEntry log_entry = new FoodLogEntry(Integer.toString(cursor.getInt(0)) +
+                        " " + cursor.getString(1),
+                        cursor.getDouble(2), type
+                );
                 food_log.add(log_entry);
                 cursor.moveToNext();
             }
@@ -184,10 +192,14 @@ public class NutritionReport {
             this.food_name = food_name;
             switch (type) {
                 case DAILY:
+                case WEEKLY:
+                case MONTHLY:
                     this.weight = weight;
                     this.weightUnit = new String("ounce");
                     break;
                 case DAILY_SHOPPING:
+                case WEEKLY_SHOPPING:
+                case MONTHLY_SHOPPING:
                     this.weightUnit = new String("lb");
                     this.weight = weight / 16;
             }
