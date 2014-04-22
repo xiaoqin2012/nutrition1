@@ -10,6 +10,14 @@ public class NutritionInformation {
     double percentageFDA;
     double valueFDA;
 
+    public NutritionInformation() {
+        this.nutritionDescription = "No Data";
+        this.weightValue = 0;
+        this.weightUnit = "";
+        this.percentageFDA = 0;
+        this.valueFDA = 0;
+    }
+
     NutritionInformation(String nutritionDescription, double weightValue, String weightUnit,
                          double valueFDA, double percentageFDA) {
         this.nutritionDescription = nutritionDescription;
