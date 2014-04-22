@@ -46,7 +46,7 @@ public class NutritionTrackerApp extends Application {
             if (cursor.moveToFirst()) {
                 do {
                     String food_name = cursor.getString(1);
-                    if (!food_name.startsWith("Babyfood"))
+                    if (!food_name.startsWith("Babyfood") && !food_name.startsWith("Infant"))
                         food_list.add(cursor.getString(1));
                 } while (cursor.moveToNext());
             }
