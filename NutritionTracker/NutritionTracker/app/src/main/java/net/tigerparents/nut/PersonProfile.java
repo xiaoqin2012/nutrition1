@@ -107,8 +107,13 @@ public class PersonProfile {
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
         age = currYear - birth;
 
-        if (isBetween(age, 0, 3)) ageGroup = "3";
-        else if (isBetween(age, 4, 8)) ageGroup = "8";
+        if (isBetween(age, 0, 3)) {
+            ageGroup = "3";
+            status = "child";
+        } else if (isBetween(age, 4, 8)) {
+            ageGroup = "8";
+            status = "child";
+        }
         else if (isBetween(age, 9, 13)) ageGroup = "13";
         else if (isBetween(age, 14, 18)) ageGroup = "18";
         else if (isBetween(age, 19, 30)) ageGroup = "30";
