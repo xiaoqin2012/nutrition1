@@ -7,8 +7,11 @@ import net.tigerparents.nut.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static net.tigerparents.nut.NutritionTrackerApp.getLogDatabaseHelper;
+import static net.tigerparents.nut.NutritionTrackerApp.getUSDADatabaseHelper;
 
 /**
  * Created by xiaoqin on 4/16/2014.
@@ -64,6 +67,11 @@ public class NutritionReport {
     public static ArrayList<NutritionInformation> getNutritionInformationReport(NutritionData.ReportTypes type) {
         NutritionReport nu_report = new NutritionReport(type);
         return nu_report.getReport();
+    }
+
+    public static RecomReport getRecomReport (NutritionData.ReportTypes type) {
+        NutritionReport nu_report = new NutritionReport(type);
+        return nu_report.generateRecomReport();
     }
 
     public ArrayList<FoodLogEntry> getLog() {
@@ -181,6 +189,43 @@ public class NutritionReport {
         }
 
         sql_daily_log = sql + condition;
+    }
+
+    public RecomReport generateRecomReport() {
+        ArrayList<NutritionInformation> nuReport = getNutritionInformationReport(type);
+        Collections.sort(nuReport, new FDAComparator());
+        String nu_desc = nuReport.get(0).getNutritionDescription();
+        String nu_id = nuReport.get(0).getNuId();
+        double nu_percentage = nuReport.get(0).getPercentageFDA();
+
+        String ouputDesc = String.format("%s is low as %f in your %s diet, you need to have more following food: \n",
+                nu_desc, nu_percentage, type.toString());
+
+        String sql = "select * from " + getUSDADatabaseHelper().top_food_tab_name +
+                " where _id = " + "\"" + nu_id + "\"" + ";";
+        Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
+        String outputFood = new String();
+        if (topFoodCursor.moveToFirst()) {
+            outputFood = topFoodCursor.getString(2);
+        }
+        return new RecomReport(ouputDesc, outputFood);
+    }
+
+    public static class RecomReport {
+        String desc;
+        String food_list;
+
+        RecomReport(String desc, String food_list) {
+            this.desc = desc;
+            this.food_list = food_list;
+        }
+    }
+
+    public class FDAComparator implements Comparator<NutritionInformation> {
+        public int compare(NutritionInformation sp1, NutritionInformation sp2) {
+            return (sp1.percentageFDA < sp2.percentageFDA) ? -1 :
+                    ((sp1.percentageFDA > sp2.percentageFDA) ? 1 : 0);
+        }
     }
 
     public class FoodLogEntry {

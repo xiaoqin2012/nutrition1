@@ -121,7 +121,7 @@ public class NutritionData {
                 if (nuID.equals("312"))
                     stdValue /= 1000;
 
-                NutritionInformation ni = new NutritionInformation(nuName, value,
+                NutritionInformation ni = new NutritionInformation(nuName, nuID, value,
                         nuCursor.getString(1), stdValue, value * 100 / stdValue);
                 info.add(ni);
             }
