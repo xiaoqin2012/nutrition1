@@ -8,7 +8,6 @@ import net.tigerparents.nut.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 
 import static net.tigerparents.nut.NutritionTrackerApp.getLogDatabaseHelper;
 import static net.tigerparents.nut.NutritionTrackerApp.getUSDADatabaseHelper;
@@ -119,8 +118,8 @@ public class NutritionReport {
             while (!cursor.isAfterLast()) {
                 NutritionData nu_data = new NutritionData(cursor.getString(1), cursor.getInt(2));
                 if (nu_info_list == null)
-                    add(nu_data.getNutritionInformation(true));
-                else add(nu_data.getNutritionInformation(false));
+                    add(nu_data.getNutritionInformation(true, false));
+                else add(nu_data.getNutritionInformation(false, false));
                 cursor.moveToNext();
             }
         } catch (Exception e) {
@@ -134,6 +133,7 @@ public class NutritionReport {
             nu_info_list.get(i).setPercentageFDA(value / (stdValue * real_days) * 100);
         }
 
+        Collections.sort(nu_info_list);
         return nu_info_list;
     }
 
@@ -193,7 +193,7 @@ public class NutritionReport {
 
     public RecomReport generateRecomReport() {
         ArrayList<NutritionInformation> nuReport = getNutritionInformationReport(type);
-        Collections.sort(nuReport, new FDAComparator());
+        Collections.sort(nuReport, Collections.reverseOrder());
         String nu_desc = nuReport.get(0).getNutritionDescription();
         String nu_id = nuReport.get(0).getNuId();
         double nu_percentage = nuReport.get(0).getPercentageFDA();
@@ -218,13 +218,6 @@ public class NutritionReport {
         RecomReport(String desc, String food_list) {
             this.desc = desc;
             this.food_list = food_list;
-        }
-    }
-
-    public class FDAComparator implements Comparator<NutritionInformation> {
-        public int compare(NutritionInformation sp1, NutritionInformation sp2) {
-            return (sp1.percentageFDA < sp2.percentageFDA) ? -1 :
-                    ((sp1.percentageFDA > sp2.percentageFDA) ? 1 : 0);
         }
     }
 

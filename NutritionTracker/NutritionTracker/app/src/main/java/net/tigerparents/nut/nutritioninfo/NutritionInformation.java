@@ -3,7 +3,7 @@ package net.tigerparents.nut.nutritioninfo;
 /**
  * Created by xiaoqin on 4/16/2014.
  */
-public class NutritionInformation {
+public class NutritionInformation implements Comparable<NutritionInformation> {
     String nutritionDescription;
     String nutr_id;
     double weightValue;
@@ -70,4 +70,11 @@ public class NutritionInformation {
     public void setPercentageFDA(double percentageFDA) {
         this.percentageFDA = percentageFDA;
     }
+
+    @Override
+    public int compareTo(NutritionInformation nuInfo) {
+        return (this.getPercentageFDA() < nuInfo.getPercentageFDA() ? -1 :
+                (this.getPercentageFDA() == nuInfo.getPercentageFDA() ? 0 : 1));
+    }
 }
+

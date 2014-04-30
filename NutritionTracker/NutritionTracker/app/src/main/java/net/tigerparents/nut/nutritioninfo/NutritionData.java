@@ -10,6 +10,7 @@ import net.tigerparents.nut.PersonProfile;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 /**
  * Created by xiaoqin on 4/10/2014.
@@ -69,7 +70,7 @@ public class NutritionData {
         NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, table_name);
     }
 
-    public ArrayList<NutritionInformation> getNutritionInformation(boolean is_std_needed) {
+    public ArrayList<NutritionInformation> getNutritionInformation(boolean is_std_needed, boolean toSort) {
         ArrayList<NutritionInformation> info = new ArrayList<NutritionInformation>();
         SQLiteDatabase usda_database = NutritionTrackerApp.getUSDADatabaseHelper().getDataBase();
         SQLiteDatabase log_database = NutritionTrackerApp.getLogDatabaseHelper().getDataBase();
@@ -115,7 +116,9 @@ public class NutritionData {
 
                 /* get the std value */
                 double stdValue = -100;
+
                 stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
+
                 if (stdValue < 0) continue;
 
                 if (nuID.equals("312"))
@@ -128,6 +131,10 @@ public class NutritionData {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             Log.e("NutritionData.class", "getNutritionInformation()", e);
+        }
+
+        if (toSort) {
+            Collections.sort(info, Collections.reverseOrder());
         }
         return info;
     }
