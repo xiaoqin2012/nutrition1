@@ -22,9 +22,10 @@
         android:id="@+id/userdata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
+        android:layout_alignLeft="@+id/tracker_button"
+        android:layout_alignStart="@+id/tracker_button"
+        android:layout_below="@+id/shopping_reports"
+        android:layout_marginTop="31dp"
         android:onClick="enterUserData"
         android:text="Enter User Data" />
 
@@ -32,10 +33,9 @@
         android:id="@+id/shopping_reports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/tracker_button"
-        android:layout_alignRight="@+id/tracker_button"
         android:layout_below="@+id/tracker_button"
-        android:layout_marginTop="92dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
         android:onClick="shoppingTracker"
         android:text="Shopping Tracker" />
 
@@ -61,4 +61,15 @@
         android:layout_marginBottom="34dp"
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-3680019745466927/1299436292" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/adView"
+        android:layout_alignLeft="@+id/userdata"
+        android:layout_alignStart="@+id/userdata"
+        android:layout_marginBottom="69dp"
+        android:onClick="onLookup"
+        android:text="Lookup" />
 </RelativeLayout>

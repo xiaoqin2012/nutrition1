@@ -30,13 +30,17 @@ public class FoodEntry extends Activity {
         UIUtils.ShowKeyboard(this);
     }
 
-    public void onSave(View v) {
+    private NutritionData createNutritionDataFromTextView() {
         AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
         NumberPicker picker = (NumberPicker) findViewById(R.id.weightPicker);
         String food_name = food_tv.getText().toString();
         int weight_in_ounces = picker.getValue();
-        NutritionData new_data = new NutritionData(food_name, weight_in_ounces);
-        new_data.save();
+        return new NutritionData(food_name, weight_in_ounces);
+    }
+
+    private void showNutritionInformationDisplay() {
+        AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
+        NumberPicker picker = (NumberPicker) findViewById(R.id.weightPicker);
         Intent intent = new Intent(this, NutritionInformationDisplay.class);
         UIUtils.HideKeyboard(this, food_tv);
         intent.putExtra(FOOD_NAME, food_tv.getText().toString());
@@ -44,6 +48,17 @@ public class FoodEntry extends Activity {
         intent.putExtra(NutritionInformationDisplay.ENTRY_FROM,
                 NutritionInformationDisplay.FOOD_ENTRY);
         startActivity(intent);
+    }
+
+    public void onSave(View v) {
+        NutritionData new_data = createNutritionDataFromTextView();
+        new_data.save();
+        showNutritionInformationDisplay();
+    }
+
+    public void onLookup(View v) {
+        NutritionData new_data = createNutritionDataFromTextView();
+        showNutritionInformationDisplay();
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
