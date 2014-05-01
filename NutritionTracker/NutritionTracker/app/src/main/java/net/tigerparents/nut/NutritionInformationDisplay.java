@@ -29,7 +29,7 @@ public class NutritionInformationDisplay extends Activity {
         NutritionData nut_data =
                 NutritionData.getNutritionDataFor(intent.getStringExtra(FoodEntry.FOOD_NAME),
                         intent.getIntExtra(FoodEntry.WEIGHT_IN_OUNCES, 0));
-        ArrayList<NutritionInformation> info = nut_data.getNutritionInformation(true);
+        ArrayList<NutritionInformation> info = nut_data.getNutritionInformation(true, true);
 
         String header_text = String.format("Name: %s", intent.getStringExtra(FoodEntry.FOOD_NAME));
         UIUtils.showNutritionInfo(this, nv, info, header_text);

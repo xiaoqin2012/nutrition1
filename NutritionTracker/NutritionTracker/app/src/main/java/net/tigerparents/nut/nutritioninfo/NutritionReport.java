@@ -7,8 +7,10 @@ import net.tigerparents.nut.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 import static net.tigerparents.nut.NutritionTrackerApp.getLogDatabaseHelper;
+import static net.tigerparents.nut.NutritionTrackerApp.getUSDADatabaseHelper;
 
 /**
  * Created by xiaoqin on 4/16/2014.
@@ -66,6 +68,11 @@ public class NutritionReport {
         return nu_report.getReport();
     }
 
+    public static RecomReport getRecomReport (NutritionData.ReportTypes type) {
+        NutritionReport nu_report = new NutritionReport(type);
+        return nu_report.generateRecomReport();
+    }
+
     public ArrayList<FoodLogEntry> getLog() {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
         try {
@@ -111,8 +118,8 @@ public class NutritionReport {
             while (!cursor.isAfterLast()) {
                 NutritionData nu_data = new NutritionData(cursor.getString(1), cursor.getInt(2));
                 if (nu_info_list == null)
-                    add(nu_data.getNutritionInformation(true));
-                else add(nu_data.getNutritionInformation(false));
+                    add(nu_data.getNutritionInformation(true, false));
+                else add(nu_data.getNutritionInformation(false, false));
                 cursor.moveToNext();
             }
         } catch (Exception e) {
@@ -126,6 +133,7 @@ public class NutritionReport {
             nu_info_list.get(i).setPercentageFDA(value / (stdValue * real_days) * 100);
         }
 
+        Collections.sort(nu_info_list);
         return nu_info_list;
     }
 
@@ -181,6 +189,36 @@ public class NutritionReport {
         }
 
         sql_daily_log = sql + condition;
+    }
+
+    public RecomReport generateRecomReport() {
+        ArrayList<NutritionInformation> nuReport = getNutritionInformationReport(type);
+        Collections.sort(nuReport, Collections.reverseOrder());
+        String nu_desc = nuReport.get(0).getNutritionDescription();
+        String nu_id = nuReport.get(0).getNuId();
+        double nu_percentage = nuReport.get(0).getPercentageFDA();
+
+        String ouputDesc = String.format("%s is low as %f in your %s diet, you need to have more following food: \n",
+                nu_desc, nu_percentage, type.toString());
+
+        String sql = "select * from " + getUSDADatabaseHelper().top_food_tab_name +
+                " where _id = " + "\"" + nu_id + "\"" + ";";
+        Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
+        String outputFood = new String();
+        if (topFoodCursor.moveToFirst()) {
+            outputFood = topFoodCursor.getString(2);
+        }
+        return new RecomReport(ouputDesc, outputFood);
+    }
+
+    public static class RecomReport {
+        String desc;
+        String food_list;
+
+        RecomReport(String desc, String food_list) {
+            this.desc = desc;
+            this.food_list = food_list;
+        }
     }
 
     public class FoodLogEntry {

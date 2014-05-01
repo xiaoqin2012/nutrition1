@@ -22,7 +22,10 @@ public class USDADataBaseHelper extends DataBaseHelper {
     public static String food_nutr_tab_name = "FOOD_NUT_DATA";
     public static String nutr_desc_tab_name = "NUTR_DEF";
     public static String daily_std_tab_name = "DAILY_STD_NUTR_TABLE";
-    //The Android's default system path of your application database.
+    public static String top_food_tab_name = "TOP_FOOD_TABLE";
+
+    public static String usda_file_name = "std_daily_table.txt";
+    public static String top_food_file_name = "top_food.txt";
 
     /**
      * Constructor
@@ -72,6 +75,27 @@ public class USDADataBaseHelper extends DataBaseHelper {
     }
 
     public void createAllTables() {
+        createFDATable();
+        createTopFoodTable();
+    }
+
+    public void createTopFoodTable() {
+        String table_name = top_food_tab_name;
+        String sql;
+        sql = "create table if not exists " + table_name + " ( " +
+                "_nu_id STRING, " +
+                "food_list STRING, " +
+                "url1 STRING, " +
+                "url2 STRING " + ");";
+        execSQL(sql, table_name);
+        writeToTable(top_food_file_name, table_name);
+    }
+
+    public void writeTopFoodTable() {
+
+    }
+
+    public void createFDATable() {
         String sql;
         /* create daily std nutrition table */
         String table_name = daily_std_tab_name;
@@ -102,13 +126,13 @@ public class USDADataBaseHelper extends DataBaseHelper {
                 " \"309\" DOUBLE " +
                 ");";
         execSQL(sql, table_name);
-        writeDailySTDTable(table_name);
+        writeToTable(usda_file_name, table_name);
     }
 
-    public void writeDailySTDTable(String table_name) {
+    public void writeToTable(String input_file, String table_name) {
 
         try {
-            InputStream input = myContext.getAssets().open("std_daily_table.txt");
+            InputStream input = myContext.getAssets().open(input_file);
             BufferedReader br = new BufferedReader(new InputStreamReader(input));
             String line;
 
