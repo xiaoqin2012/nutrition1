@@ -23,7 +23,7 @@ public class NutritionReport {
     int num_of_days;
     String table_name = null;
 
-    NutritionReport(NutritionData.ReportTypes type) {
+    public NutritionReport(NutritionData.ReportTypes type) {
         this.nu_info_list = null;
         this.type = type;
         table_name = NutritionData.isForShopping(type) ? LogDataBaseHelper.weekly_food_log :
@@ -217,6 +217,22 @@ public class NutritionReport {
 
         RecomReport(String desc, String food_list) {
             this.desc = desc;
+            this.food_list = food_list;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+
+        public String getFood_list() {
+            return food_list;
+        }
+
+        public void setFood_list(String food_list) {
             this.food_list = food_list;
         }
     }

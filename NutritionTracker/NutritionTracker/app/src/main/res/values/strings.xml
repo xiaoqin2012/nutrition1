@@ -21,5 +21,6 @@
     <string name="title_activity_shopping_entry">ShoppingEntry</string>
     <string name="title_activity_shopping_tracker">ShoppingTracker</string>
     <string name="title_activity_show_recent_entries">ShowRecentEntries</string>
+    <string name="title_activity_recommended_food">RecommendedFood</string>
 
 </resources>
