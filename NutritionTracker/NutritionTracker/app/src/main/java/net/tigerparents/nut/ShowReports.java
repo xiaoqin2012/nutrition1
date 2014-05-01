@@ -23,7 +23,12 @@ public class ShowReports extends Activity {
     public static final String REPORTS_PARENT = "reports_parent";
     public static final String REPORTS_FOR_EATING = "eating";
     public static final String REPORTS_FOR_SHOPPING = "shopping";
+    static NutritionReport _report;
     EntryType _entry_type;
+
+    public static NutritionReport get_report() {
+        return _report;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class ShowReports extends Activity {
         spinner.setOnItemSelectedListener(_entry_type == EntryType.EATING ?
                 new EatingReportSelectedListener(this) :
                 new ShoppingSelectedListener(this));
+        ListView lv = (ListView) findViewById(R.id.reports_lv);
+        lv.setOnItemClickListener(new ListViewAdapterListener(this));
     }
 
     void updateReport(String report_type) {
@@ -74,6 +81,19 @@ public class ShowReports extends Activity {
 
     enum EntryType {EATING, SHOPPING}
 
+    private class ListViewAdapterListener implements AdapterView.OnItemClickListener {
+        Activity _activity;
+
+        ListViewAdapterListener(Activity activity) {
+            _activity = activity;
+        }
+
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(_activity, RecommendedFood.class);
+            startActivity(intent);
+        }
+    }
+
     private class ShowReportsListener {
 
         Activity _activity;
@@ -84,7 +104,7 @@ public class ShowReports extends Activity {
 
         public void findAndShowReports(String report_type, NutritionData.ReportTypes type) {
             ArrayList<NutritionInformation> report =
-                    NutritionReport.getNutritionInformationReport(type);
+                    _report.getNutritionInformationReport(type);
             if (report == null) {
                 // dummy up bogus data
                 NutritionInformation dummy = new NutritionInformation();
@@ -120,6 +140,7 @@ public class ShowReports extends Activity {
                 Log.e("Invalid report type", report_type);
                 return;
             }
+            _report = new NutritionReport(type);
             findAndShowReports(report_type, type);
         }
 
@@ -151,6 +172,7 @@ public class ShowReports extends Activity {
                 Log.e("Invalid report type", report_type);
                 return;
             }
+            _report = new NutritionReport(type);
             findAndShowReports(report_type, type);
         }
 
