@@ -77,13 +77,32 @@ public class USDADataBaseHelper extends DataBaseHelper {
     public void createAllTables() {
         createFDATable();
         createTopFoodTable();
+        trimFoodNutTable();
+    }
+
+    public void trimFoodNutTable() {
+        String table_name = food_nutr_tab_name;
+
+        String sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%babyfood%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
+
+        sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%BABYFOOD%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
+
+        sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%infant%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
+
+        sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%INF FORMULA%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
     }
 
     public void createTopFoodTable() {
         String table_name = top_food_tab_name;
         String sql;
-
-        sql = "drop table " + top_food_tab_name + ";";
 
         sql = "create table if not exists " + table_name + " ( " +
                 "_nu_id STRING, " +
@@ -92,10 +111,6 @@ public class USDADataBaseHelper extends DataBaseHelper {
                 "url2 STRING " + ");";
         execSQL(sql, table_name);
         writeToTable(top_food_file_name, table_name);
-    }
-
-    public void writeTopFoodTable() {
-
     }
 
     public void createFDATable() {

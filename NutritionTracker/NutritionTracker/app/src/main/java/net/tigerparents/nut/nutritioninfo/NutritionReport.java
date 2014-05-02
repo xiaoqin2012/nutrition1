@@ -68,40 +68,43 @@ public class NutritionReport {
         return nu_report.getReport();
     }
 
-    public static RecomReport getRecomReport (NutritionData.ReportTypes type) {
-        NutritionReport nu_report = new NutritionReport(type);
-        return nu_report.generateRecomReport();
-    }
-
-    public static String topFoodReport(String nu_desc) {
+    public static FoodNutrientInfo[] getFoodFor(String nu_desc) {
+        String[] parts = nu_desc.split(" :");
         String nu_id = null;
+        String units = null;
         String sql;
+        ArrayList<FoodNutrientInfo> retval = new ArrayList<FoodNutrientInfo>();
+        FoodNutrientInfo[] dummy = new FoodNutrientInfo[1];
 
         sql = "select * from " + getUSDADatabaseHelper().nutr_desc_tab_name + " where NutrDesc = \""
-                + nu_desc + "\";";
+                + parts[0] + "\";";
 
         Cursor nu_desc_cursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
 
         if (nu_desc_cursor.moveToFirst()) {
             nu_id = nu_desc_cursor.getString(0);
+            units = nu_desc_cursor.getString(1);
         }
 
-        sql = "select * from " + getUSDADatabaseHelper().top_food_tab_name +
-                " where _id = " + "\"" + nu_id + "\"" + ";";
+        /* select Shrt_Desc, "301"  from food_nut_data order by "301" desc */
+        sql = "select Shrt_Desc, + " + "\"" + nu_id + "\"" +
+                " from " + getUSDADatabaseHelper().food_nutr_tab_name +
+                " order by " + "\"" + nu_id + "\"" + "desc;";
 
         Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
         String outputFood = new String();
         if (topFoodCursor.moveToFirst()) {
-            outputFood = topFoodCursor.getString(2);
+            int i = 0;
+            do {
+                retval.add(new FoodNutrientInfo(topFoodCursor.getString(0), nu_desc,
+                        topFoodCursor.getDouble(1), units));
+                i++;
+            } while (i < 200 && topFoodCursor.moveToNext());
         }
-        return outputFood;
-    }
 
-    public static FoodNutrientInfo[] getFoodFor(String nutrient) {
-        FoodNutrientInfo[] dummy = new FoodNutrientInfo[1];
-        ArrayList<FoodNutrientInfo> retval = new ArrayList<FoodNutrientInfo>();
         return retval.toArray(dummy);
     }
+
 
     public ArrayList<FoodLogEntry> getLog() {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
@@ -221,25 +224,6 @@ public class NutritionReport {
         sql_daily_log = sql + condition;
     }
 
-    public RecomReport generateRecomReport() {
-        ArrayList<NutritionInformation> nuReport = getNutritionInformationReport(type);
-        Collections.sort(nuReport, Collections.reverseOrder());
-        String nu_desc = nuReport.get(0).getNutritionDescription();
-        String nu_id = nuReport.get(0).getNuId();
-        double nu_percentage = nuReport.get(0).getPercentageFDA();
-
-        String ouputDesc = String.format("%s is low as %f in your %s diet, you need to have more following food: \n",
-                nu_desc, nu_percentage, type.toString());
-
-        String sql = "select * from " + getUSDADatabaseHelper().top_food_tab_name +
-                " where _id = " + "\"" + nu_id + "\"" + ";";
-        Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
-        String outputFood = new String();
-        if (topFoodCursor.moveToFirst()) {
-            outputFood = topFoodCursor.getString(2);
-        }
-        return new RecomReport(ouputDesc, outputFood);
-    }
 
     public static class RecomReport {
         String desc;
