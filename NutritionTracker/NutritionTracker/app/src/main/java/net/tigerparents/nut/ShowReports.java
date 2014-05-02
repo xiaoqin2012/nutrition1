@@ -23,12 +23,7 @@ public class ShowReports extends Activity {
     public static final String REPORTS_PARENT = "reports_parent";
     public static final String REPORTS_FOR_EATING = "eating";
     public static final String REPORTS_FOR_SHOPPING = "shopping";
-    static NutritionReport _report;
     EntryType _entry_type;
-
-    public static NutritionReport get_report() {
-        return _report;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +84,9 @@ public class ShowReports extends Activity {
         }
 
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            String value = (String) adapterView.getItemAtPosition(i);
             Intent intent = new Intent(_activity, RecommendedFood.class);
+            intent.putExtra(RecommendedFood.NUTRIENT, value);
             startActivity(intent);
         }
     }
@@ -104,7 +101,7 @@ public class ShowReports extends Activity {
 
         public void findAndShowReports(String report_type, NutritionData.ReportTypes type) {
             ArrayList<NutritionInformation> report =
-                    _report.getNutritionInformationReport(type);
+                    NutritionReport.getNutritionInformationReport(type);
             if (report == null) {
                 // dummy up bogus data
                 NutritionInformation dummy = new NutritionInformation();
@@ -140,7 +137,6 @@ public class ShowReports extends Activity {
                 Log.e("Invalid report type", report_type);
                 return;
             }
-            _report = new NutritionReport(type);
             findAndShowReports(report_type, type);
         }
 
@@ -172,7 +168,6 @@ public class ShowReports extends Activity {
                 Log.e("Invalid report type", report_type);
                 return;
             }
-            _report = new NutritionReport(type);
             findAndShowReports(report_type, type);
         }
 

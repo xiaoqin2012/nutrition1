@@ -97,6 +97,12 @@ public class NutritionReport {
         return outputFood;
     }
 
+    public static FoodNutrientInfo[] getFoodFor(String nutrient) {
+        FoodNutrientInfo[] dummy = new FoodNutrientInfo[1];
+        ArrayList<FoodNutrientInfo> retval = new ArrayList<FoodNutrientInfo>();
+        return retval.toArray(dummy);
+    }
+
     public ArrayList<FoodLogEntry> getLog() {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
         try {
