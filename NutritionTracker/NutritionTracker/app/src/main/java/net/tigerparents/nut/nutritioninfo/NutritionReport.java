@@ -73,10 +73,28 @@ public class NutritionReport {
         return nu_report.generateRecomReport();
     }
 
-    public static FoodNutrientInfo[] getFoodFor(String nutrient) {
-        FoodNutrientInfo dummy[] = new FoodNutrientInfo[1];
-        ArrayList<FoodNutrientInfo> retval = new ArrayList<FoodNutrientInfo>();
-        return retval.toArray(dummy);
+    public static String topFoodReport(String nu_desc) {
+        String nu_id = null;
+        String sql;
+
+        sql = "select * from " + getUSDADatabaseHelper().nutr_desc_tab_name + " where NutrDesc = \""
+                + nu_desc + "\";";
+
+        Cursor nu_desc_cursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
+
+        if (nu_desc_cursor.moveToFirst()) {
+            nu_id = nu_desc_cursor.getString(0);
+        }
+
+        sql = "select * from " + getUSDADatabaseHelper().top_food_tab_name +
+                " where _id = " + "\"" + nu_id + "\"" + ";";
+
+        Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
+        String outputFood = new String();
+        if (topFoodCursor.moveToFirst()) {
+            outputFood = topFoodCursor.getString(2);
+        }
+        return outputFood;
     }
 
     public ArrayList<FoodLogEntry> getLog() {

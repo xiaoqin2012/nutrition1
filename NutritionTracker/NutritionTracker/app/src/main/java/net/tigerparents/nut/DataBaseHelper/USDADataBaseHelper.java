@@ -82,6 +82,9 @@ public class USDADataBaseHelper extends DataBaseHelper {
     public void createTopFoodTable() {
         String table_name = top_food_tab_name;
         String sql;
+
+        sql = "drop table " + top_food_tab_name + ";";
+
         sql = "create table if not exists " + table_name + " ( " +
                 "_nu_id STRING, " +
                 "food_list STRING, " +
