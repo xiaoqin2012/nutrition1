@@ -19,7 +19,7 @@ public class RecommendedFood extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommended_food);
         NutritionReport.RecomReport recommended_foods =
-                ShowReports.get_report().generateRecomReport();
+                ShowReports.get_report().topFoodReport(string);
         ListView lv = (ListView) findViewById(R.id.recommended);
         ArrayList<String> listview_data = new ArrayList<String>();
         listview_data.add(recommended_foods.getDesc());
