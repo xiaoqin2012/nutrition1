@@ -117,7 +117,7 @@ public class USDADataBaseHelper extends DataBaseHelper {
         String sql;
         /* create daily std nutrition table */
         String table_name = daily_std_tab_name;
-        sql = "create table if not exists " + table_name + " ( " +
+        sql = "create table " + table_name + " ( " +
                 "_status STRING , " +
                 " age_group STRING, " +
                 " \"291\" DOUBLE, " +
@@ -141,7 +141,9 @@ public class USDADataBaseHelper extends DataBaseHelper {
                 " \"003\" DOUBLE, " +
                 " \"305\" DOUBLE, " +
                 " \"317\" DOUBLE, " +
-                " \"309\" DOUBLE " +
+                " \"309\" DOUBLE, " +
+                " \"629\" DOUBLE, " +
+                " \"621\" DOUBLE " +
                 ");";
         execSQL(sql, table_name);
         writeToTable(usda_file_name, table_name);
