@@ -20,6 +20,11 @@ public class FoodEntry extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_entry);
+        if (PersonProfile.getPersonProfile() == null) {
+            // don't let them do anything without entering a profile
+            Intent intent = new Intent(this, EnterUserData.class);
+            startActivity(intent);
+        }
         AutoCompleteTextView food_tv = (AutoCompleteTextView) findViewById(R.id.food_entry_tv);
         UIUtils.setupTextViewWithFoodNames(this, food_tv);
         NumberPicker picker = (NumberPicker) findViewById(R.id.weightPicker);

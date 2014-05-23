@@ -7,9 +7,6 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import net.tigerparents.nut.nutritioninfo.FoodNutrientInfo;
-import net.tigerparents.nut.nutritioninfo.NutritionReport;
-
 import java.util.ArrayList;
 
 
@@ -22,14 +19,10 @@ public class RecommendedFood extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommended_food);
         String nutrient_name = getIntent().getStringExtra(NUTRIENT);
-        FoodNutrientInfo[] recommended_foods = NutritionReport.getFoodFor(nutrient_name);
+        // String recommended_food = NutritionReport.topFoodReport(nutrient_name);
         ListView lv = (ListView) findViewById(R.id.recommended);
         ArrayList<String> listview_data = new ArrayList<String>();
-        for (FoodNutrientInfo i : recommended_foods) {
-            String user_view = String.format("%s: %.2f %s", i.get_foodname(),
-                    i.get_nutrient_value(), i.get_nutrient_unit());
-            listview_data.add(user_view);
-        }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, listview_data);
         lv.setAdapter(arrayAdapter);
