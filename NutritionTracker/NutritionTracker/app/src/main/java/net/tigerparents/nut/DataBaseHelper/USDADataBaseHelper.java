@@ -77,13 +77,32 @@ public class USDADataBaseHelper extends DataBaseHelper {
     public void createAllTables() {
         createFDATable();
         createTopFoodTable();
+        trimFoodNutTable();
+    }
+
+    public void trimFoodNutTable() {
+        String table_name = food_nutr_tab_name;
+
+        String sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%babyfood%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
+
+        sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%BABYFOOD%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
+
+        sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%infant%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
+
+        sql = "delete from " + table_name + " where Shrt_Desc like " +
+                "\"" + "%INF FORMULA%" + "\";";
+        execSQL(sql, food_nutr_tab_name);
     }
 
     public void createTopFoodTable() {
         String table_name = top_food_tab_name;
         String sql;
-
-        sql = "drop table " + top_food_tab_name + ";";
 
         sql = "create table if not exists " + table_name + " ( " +
                 "_nu_id STRING, " +
@@ -94,15 +113,11 @@ public class USDADataBaseHelper extends DataBaseHelper {
         writeToTable(top_food_file_name, table_name);
     }
 
-    public void writeTopFoodTable() {
-
-    }
-
     public void createFDATable() {
         String sql;
         /* create daily std nutrition table */
         String table_name = daily_std_tab_name;
-        sql = "create table if not exists " + table_name + " ( " +
+        sql = "create table " + table_name + " ( " +
                 "_status STRING , " +
                 " age_group STRING, " +
                 " \"291\" DOUBLE, " +
@@ -126,7 +141,9 @@ public class USDADataBaseHelper extends DataBaseHelper {
                 " \"003\" DOUBLE, " +
                 " \"305\" DOUBLE, " +
                 " \"317\" DOUBLE, " +
-                " \"309\" DOUBLE " +
+                " \"309\" DOUBLE, " +
+                " \"629\" DOUBLE, " +
+                " \"621\" DOUBLE " +
                 ");";
         execSQL(sql, table_name);
         writeToTable(usda_file_name, table_name);

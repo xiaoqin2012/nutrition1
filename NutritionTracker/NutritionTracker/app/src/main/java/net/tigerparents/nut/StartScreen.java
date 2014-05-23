@@ -45,7 +45,6 @@ public class StartScreen extends Activity {
         startActivityForResult(intent, EXPORT_FILE_PATH);
     }
 
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EXPORT_FILE_PATH) {
             if (resultCode == RESULT_OK) {
