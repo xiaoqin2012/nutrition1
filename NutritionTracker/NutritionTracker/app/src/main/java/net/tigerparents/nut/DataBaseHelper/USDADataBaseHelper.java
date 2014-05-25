@@ -76,7 +76,6 @@ public class USDADataBaseHelper extends DataBaseHelper {
 
     public void createAllTables() {
         createFDATable();
-        createTopFoodTable();
         trimFoodNutTable();
     }
 
@@ -96,7 +95,7 @@ public class USDADataBaseHelper extends DataBaseHelper {
         execSQL(sql, food_nutr_tab_name);
 
         sql = "delete from " + table_name + " where Shrt_Desc like " +
-                "\"" + "%INF FORMULA%" + "\";";
+                "\"" + "%INF %" + "\";";
         execSQL(sql, food_nutr_tab_name);
     }
 
@@ -117,6 +116,7 @@ public class USDADataBaseHelper extends DataBaseHelper {
         String sql;
         /* create daily std nutrition table */
         String table_name = daily_std_tab_name;
+        execSQL("drop table if exists " + table_name + ";", table_name);
         sql = "create table " + table_name + " ( " +
                 "_status STRING , " +
                 " age_group STRING, " +

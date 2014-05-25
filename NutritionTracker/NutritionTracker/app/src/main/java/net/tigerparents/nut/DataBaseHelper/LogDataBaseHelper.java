@@ -57,6 +57,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
         table_name = daily_food_log;
         sql = "create table if not exists " + table_name + "  (" +
                 "_date INT, " +
+                "time STRING, " +
                 "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);

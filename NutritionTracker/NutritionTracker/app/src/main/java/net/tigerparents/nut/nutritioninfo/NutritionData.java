@@ -89,12 +89,10 @@ public class NutritionData {
                     "age_group = " + "\"" + profile.getAgeGroup() + "\"" + ";";
 
             Cursor stdValueCursor = usda_database.rawQuery(sql2, null);
-            stdValueCursor.moveToFirst();
+            if (stdValueCursor.moveToFirst() == false) return null;
 
             String status = stdValueCursor.getString(0);
             String age_group = stdValueCursor.getString(1);
-
-            System.out.print(status + age_group);
 
             for (i = 4; i < dbCursor.getColumnCount(); i++) {
                 String nuID = dbCursor.getColumnName(i);

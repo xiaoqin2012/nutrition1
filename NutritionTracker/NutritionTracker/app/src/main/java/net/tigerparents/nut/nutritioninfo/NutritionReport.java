@@ -129,6 +129,8 @@ public class NutritionReport {
     }
 
     public void add(ArrayList<NutritionInformation> array) {
+        if (array == null) return;
+
         if (nu_info_list == null) {
             nu_info_list = array;
         } else {
