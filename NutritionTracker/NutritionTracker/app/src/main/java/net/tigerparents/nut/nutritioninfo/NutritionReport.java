@@ -92,6 +92,7 @@ public class NutritionReport {
                 " order by " + "\"" + nu_id + "\"" + "desc;";
 
         Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
+
         String outputFood = new String();
         if (topFoodCursor.moveToFirst()) {
             int i = 0;
