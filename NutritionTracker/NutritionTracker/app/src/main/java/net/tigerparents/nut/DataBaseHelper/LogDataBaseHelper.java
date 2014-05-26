@@ -61,6 +61,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
                 "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);
+        execSQL("ALTER TABLE " + LogDataBaseHelper.daily_food_log + " ADD COLUMN time STRING DEFAULT null", table_name);
 
         /* create weekly food log */
         table_name = weekly_food_log;
@@ -69,5 +70,11 @@ public class LogDataBaseHelper extends DataBaseHelper {
                 "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);
+    }
+
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion > oldVersion) {
+            db.execSQL("ALTER TABLE " + LogDataBaseHelper.daily_food_log + " ADD COLUMN time STRING DEFAULT null");
+        }
     }
 }
