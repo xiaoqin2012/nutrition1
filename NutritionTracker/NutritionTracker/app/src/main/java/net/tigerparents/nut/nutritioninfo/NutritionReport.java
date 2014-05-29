@@ -55,9 +55,16 @@ public class NutritionReport {
                     break;
             }
 
-            String[] parts = food_description.split(" ", 2);
-            getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
-                    new String[]{parts[0], parts[1]});
+            String[] parts = food_description.split(" ");
+            if (parts[0].length() == 8) {
+                parts = food_description.split(" ", 2);
+                String[] food_name = parts[1].split(":", 2);
+                getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
+                        new String[]{parts[0], food_name[0]});
+            } else {
+                getLogDatabaseHelper().getDataBase().delete(table_name, " time = ?",
+                        new String[]{food_description.substring(0, 28)});
+            }
         } catch (Exception e) {
             Log.e(e.getClass().getName(), e.getMessage(), e);
         }
@@ -114,12 +121,6 @@ public class NutritionReport {
             Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql, null);
             int dateIndex = cursor.getColumnIndex("_date");
             int timeIndex = cursor.getColumnIndex("time");
-            if (timeIndex < 0) {
-                getLogDatabaseHelper().execSQL("ALTER TABLE " +
-                        table_name +
-                        " ADD COLUMN time STRING DEFAULT null", table_name);
-                timeIndex = cursor.getColumnIndex("time");
-            }
 
             int foodIndex = cursor.getColumnIndex("food_name");
             int weightIndex = cursor.getColumnIndex("weight");

@@ -98,16 +98,16 @@ public class ShowRecentEntries extends Activity {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            String row_text = (String) adapterView.getItemAtPosition(i);
-            String[] row_text_split = row_text.split(":");
-            final String food_description = row_text_split[0];
+            final String row_text = (String) adapterView.getItemAtPosition(i);
+            //String[] row_text_split = row_text.split(":");
+            //final String food_description = row_text_split[0];
             AlertDialog.Builder delete_dialog_builder = new AlertDialog.Builder(_activity);
             delete_dialog_builder.setTitle("Delete this entry?");
             delete_dialog_builder.setMessage("Click yes to delete!")
                     .setCancelable(false)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            _activity.deleteItem(food_description);
+                            _activity.deleteItem(row_text);
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
