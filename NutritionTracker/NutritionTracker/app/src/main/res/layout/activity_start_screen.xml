@@ -66,10 +66,21 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adView"
         android:layout_alignLeft="@+id/userdata"
         android:layout_alignStart="@+id/userdata"
-        android:layout_marginBottom="69dp"
+        android:layout_below="@+id/userdata"
+        android:layout_marginTop="35dp"
         android:onClick="onLookup"
         android:text="Lookup" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/adView"
+        android:layout_alignLeft="@+id/shopping_reports"
+        android:layout_alignStart="@+id/shopping_reports"
+        android:layout_marginBottom="26dp"
+        android:onClick="onExportData"
+        android:text="Export" />
 </RelativeLayout>
