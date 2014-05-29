@@ -27,6 +27,34 @@ public class USDADataBaseHelper extends DataBaseHelper {
     public static String usda_file_name = "std_daily_table.txt";
     public static String top_food_file_name = "top_food.txt";
 
+    public static String fda_std_fields = "_status STRING , " +
+            " age_group STRING, " +
+            " \"291\" DOUBLE, " +
+            " \"301\" DOUBLE, " +
+            " \"205\" DOUBLE, " +
+            " \"203\" DOUBLE, " +
+            " \"320\" DOUBLE, " +
+            " \"401\" DOUBLE, " +
+            " \"328\" DOUBLE, " +
+            " \"323\" DOUBLE, " +
+            " \"404\" DOUBLE, " +
+            " \"405\" DOUBLE, " +
+            " \"406\" DOUBLE, " +
+            " \"415\" DOUBLE, " +
+            " \"417\" DOUBLE, " +
+            " \"418\" DOUBLE, " +
+            " \"312\" DOUBLE, " +
+            " \"002\" DOUBLE, " +
+            " \"303\" DOUBLE, " +
+            " \"304\" DOUBLE, " +
+            " \"003\" DOUBLE, " +
+            " \"305\" DOUBLE, " +
+            " \"317\" DOUBLE, " +
+            " \"309\" DOUBLE, " +
+            " \"629\" DOUBLE, " +
+            " \"621\" DOUBLE ";
+
+
     /**
      * Constructor
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
@@ -75,8 +103,8 @@ public class USDADataBaseHelper extends DataBaseHelper {
     }
 
     public void createAllTables() {
-        createFDATable();
-        createTopFoodTable();
+        //createFDATable();
+        createTable(daily_std_tab_name, fda_std_fields);
         trimFoodNutTable();
     }
 
@@ -96,55 +124,15 @@ public class USDADataBaseHelper extends DataBaseHelper {
         execSQL(sql, food_nutr_tab_name);
 
         sql = "delete from " + table_name + " where Shrt_Desc like " +
-                "\"" + "%INF FORMULA%" + "\";";
+                "\"" + "%INF %" + "\";";
         execSQL(sql, food_nutr_tab_name);
     }
 
-    public void createTopFoodTable() {
-        String table_name = top_food_tab_name;
+    public void createTable(String table_name, String fields) {
         String sql;
 
-        sql = "create table if not exists " + table_name + " ( " +
-                "_nu_id STRING, " +
-                "food_list STRING, " +
-                "url1 STRING, " +
-                "url2 STRING " + ");";
-        execSQL(sql, table_name);
-        writeToTable(top_food_file_name, table_name);
-    }
-
-    public void createFDATable() {
-        String sql;
-        /* create daily std nutrition table */
-        String table_name = daily_std_tab_name;
-        sql = "create table " + table_name + " ( " +
-                "_status STRING , " +
-                " age_group STRING, " +
-                " \"291\" DOUBLE, " +
-                " \"301\" DOUBLE, " +
-                " \"205\" DOUBLE, " +
-                " \"203\" DOUBLE, " +
-                " \"320\" DOUBLE, " +
-                " \"401\" DOUBLE, " +
-                " \"328\" DOUBLE, " +
-                " \"323\" DOUBLE, " +
-                " \"404\" DOUBLE, " +
-                " \"405\" DOUBLE, " +
-                " \"406\" DOUBLE, " +
-                " \"415\" DOUBLE, " +
-                " \"417\" DOUBLE, " +
-                " \"418\" DOUBLE, " +
-                " \"312\" DOUBLE, " +
-                " \"002\" DOUBLE, " +
-                " \"303\" DOUBLE, " +
-                " \"304\" DOUBLE, " +
-                " \"003\" DOUBLE, " +
-                " \"305\" DOUBLE, " +
-                " \"317\" DOUBLE, " +
-                " \"309\" DOUBLE, " +
-                " \"629\" DOUBLE, " +
-                " \"621\" DOUBLE " +
-                ");";
+        execSQL("drop table if exists " + table_name + ";", table_name);
+        sql = "create table " + table_name + " ( " + fields + ");";
         execSQL(sql, table_name);
         writeToTable(usda_file_name, table_name);
     }

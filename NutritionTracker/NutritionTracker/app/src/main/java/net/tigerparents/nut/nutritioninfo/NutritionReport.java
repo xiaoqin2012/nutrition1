@@ -19,7 +19,7 @@ public class NutritionReport {
     ArrayList<NutritionInformation> nu_info_list;
     NutritionData.ReportTypes type;
 
-    String sql_daily_log;
+    String sql_query_log;
     int num_of_days;
     String table_name = null;
 
@@ -55,9 +55,16 @@ public class NutritionReport {
                     break;
             }
 
-            String[] parts = food_description.split(" ", 2);
-            getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
-                    new String[]{parts[0], parts[1]});
+            String[] parts = food_description.split(" ");
+            if (parts[0].length() == 8) {
+                parts = food_description.split(" ", 2);
+                String[] food_name = parts[1].split(":", 2);
+                getLogDatabaseHelper().getDataBase().delete(table_name, " _date = ? and food_name = ? ",
+                        new String[]{parts[0], food_name[0]});
+            } else {
+                getLogDatabaseHelper().getDataBase().delete(table_name, " time = ?",
+                        new String[]{food_description.substring(0, 28)});
+            }
         } catch (Exception e) {
             Log.e(e.getClass().getName(), e.getMessage(), e);
         }
@@ -92,6 +99,7 @@ public class NutritionReport {
                 " order by " + "\"" + nu_id + "\"" + "desc;";
 
         Cursor topFoodCursor = getUSDADatabaseHelper().getDataBase().rawQuery(sql, null);
+
         String outputFood = new String();
         if (topFoodCursor.moveToFirst()) {
             int i = 0;
@@ -109,14 +117,28 @@ public class NutritionReport {
     public ArrayList<FoodLogEntry> getLog() {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
         try {
-            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
+            String sql = "select * from " + table_name + " order by _date DESC;";
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql, null);
+            int dateIndex = cursor.getColumnIndex("_date");
+            int timeIndex = cursor.getColumnIndex("time");
+
+            int foodIndex = cursor.getColumnIndex("food_name");
+            int weightIndex = cursor.getColumnIndex("weight");
+
             if (!cursor.moveToFirst())
                 return food_log;
 
+            String time_value = null;
+
             while (!cursor.isAfterLast()) {
-                FoodLogEntry log_entry = new FoodLogEntry(Integer.toString(cursor.getInt(0)) +
-                        " " + cursor.getString(1),
-                        cursor.getDouble(2), type
+                time_value = cursor.getString(timeIndex);
+                if (time_value == null) {
+                    time_value = cursor.getString(dateIndex);
+                }
+                FoodLogEntry log_entry = new FoodLogEntry(
+                        time_value + " " + cursor.getString(foodIndex),
+                        cursor.getDouble(weightIndex),
+                        type
                 );
                 food_log.add(log_entry);
                 cursor.moveToNext();
@@ -129,6 +151,9 @@ public class NutritionReport {
     }
 
     public void add(ArrayList<NutritionInformation> array) {
+        if (array == null)
+            return;
+
         if (nu_info_list == null) {
             nu_info_list = array;
         } else {
@@ -144,12 +169,16 @@ public class NutritionReport {
 
     public ArrayList<NutritionInformation> getReport() {
         try {
-            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_daily_log, null);
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_query_log, null);
             if (!cursor.moveToFirst())
                 return nu_info_list;
 
+            int foodIndex = cursor.getColumnIndex("food_name");
+            int weightIndex = cursor.getColumnIndex("weight");
+
             while (!cursor.isAfterLast()) {
-                NutritionData nu_data = new NutritionData(cursor.getString(1), cursor.getInt(2));
+                NutritionData nu_data = new NutritionData(cursor.getString(foodIndex),
+                        cursor.getInt(weightIndex));
                 if (nu_info_list == null)
                     add(nu_data.getNutritionInformation(true, false));
                 else add(nu_data.getNutritionInformation(false, false));
@@ -221,7 +250,7 @@ public class NutritionReport {
                 break;
         }
 
-        sql_daily_log = sql + condition;
+        sql_query_log = sql + condition;
     }
 
 

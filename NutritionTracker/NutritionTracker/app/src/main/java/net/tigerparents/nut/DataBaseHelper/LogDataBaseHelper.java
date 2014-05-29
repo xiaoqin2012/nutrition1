@@ -10,7 +10,7 @@ import net.tigerparents.nut.Log;
  */
 public class LogDataBaseHelper extends DataBaseHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static String person_profile_tab_name = "PERSON_PROFILE_TABLE";
     public static String daily_food_log = "DAILY_FOOD_LOG";
     public static String weekly_food_log = "WEEKLY_FOOD_LOG";
@@ -57,16 +57,27 @@ public class LogDataBaseHelper extends DataBaseHelper {
         table_name = daily_food_log;
         sql = "create table if not exists " + table_name + "  (" +
                 "_date INT, " +
+                "time STRING, " +
                 "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);
+        execSQL("ALTER TABLE " + table_name + " ADD COLUMN time STRING DEFAULT null", table_name);
 
         /* create weekly food log */
         table_name = weekly_food_log;
         sql = "create table if not exists " + table_name + " (" +
                 "_date INT, " +
+                "time STRING, " +
                 "food_name STRING, " +
                 "weight DOUBLE )";
         execSQL(sql, table_name);
+        execSQL("ALTER TABLE " + table_name + " ADD COLUMN time STRING DEFAULT null", table_name);
+    }
+
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion > oldVersion) {
+            db.execSQL("ALTER TABLE " + LogDataBaseHelper.daily_food_log + " ADD COLUMN time STRING DEFAULT null");
+            db.execSQL("ALTER TABLE " + LogDataBaseHelper.weekly_food_log + " ADD COLUMN time STRING DEFAULT null");
+        }
     }
 }
