@@ -54,8 +54,7 @@ public class ExportDialog extends Activity {
         try {
             File exportFile = new File(Environment.getExternalStorageDirectory(), filename);
             FileOutputStream output = new FileOutputStream(exportFile);
-            output.write(0);
-            output.close();
+            net.tigerparents.nut.nutritioninfo.NutritionData.export(output);
 
             String new_intent_string = getIntent().getStringExtra("callback");
             Intent return_value = new Intent(new_intent_string);
