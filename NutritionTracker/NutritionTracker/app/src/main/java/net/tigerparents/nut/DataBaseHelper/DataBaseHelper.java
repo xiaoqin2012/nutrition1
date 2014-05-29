@@ -107,7 +107,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean execSQL(String sql, String table_name) {
-        /* give table name for create tables */
         try {
             getDataBase().beginTransaction();
             getDataBase().execSQL(sql);

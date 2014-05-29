@@ -110,9 +110,17 @@ public class NutritionReport {
     public ArrayList<FoodLogEntry> getLog() {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
         try {
-            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql_query_log, null);
+            String sql = "select * from " + table_name + " order by _date DESC;";
+            Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql, null);
             int dateIndex = cursor.getColumnIndex("_date");
             int timeIndex = cursor.getColumnIndex("time");
+            if (timeIndex < 0) {
+                getLogDatabaseHelper().execSQL("ALTER TABLE " +
+                        table_name +
+                        " ADD COLUMN time STRING DEFAULT null", table_name);
+                timeIndex = cursor.getColumnIndex("time");
+            }
+
             int foodIndex = cursor.getColumnIndex("food_name");
             int weightIndex = cursor.getColumnIndex("weight");
 

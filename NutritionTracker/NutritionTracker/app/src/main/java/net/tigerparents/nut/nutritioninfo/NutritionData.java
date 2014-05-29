@@ -3,7 +3,6 @@ package net.tigerparents.nut.nutritioninfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
 import net.tigerparents.nut.DataBaseHelper.USDADataBaseHelper;
 import net.tigerparents.nut.Log;
 import net.tigerparents.nut.NutritionTrackerApp;
@@ -68,20 +67,14 @@ public class NutritionData {
         int date = getTodayValue();
         String sql;
 
-        if (table_name.equals(LogDataBaseHelper.daily_food_log)) {
-            Date time = new Date();
-            sql = "insert into " + table_name + " (_date, time, food_name, weight) " +
-                    "values ( " +
-                    date + ", " +
-                    "\'" + time.toString() + "\'" + "," +
-                    "\'" + food_name + "\', " +
-                    weightInOunces +
-                    ");";
-        } else {
-            sql = "insert into " + table_name + " (_date, food_name, weight) " +
-                    "values ( " + date + ", " +
-                    "\'" + food_name + "\', " + weightInOunces + ");";
-        }
+        Date time = new Date();
+        sql = "insert into " + table_name + " (_date, time, food_name, weight) " +
+                "values ( " +
+                date + ", " +
+                "\'" + time.toString() + "\'" + "," +
+                "\'" + food_name + "\', " +
+                weightInOunces +
+                ");";
 
         NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, table_name);
     }
