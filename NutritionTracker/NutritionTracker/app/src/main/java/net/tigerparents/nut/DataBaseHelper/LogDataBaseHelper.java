@@ -52,6 +52,8 @@ public class LogDataBaseHelper extends DataBaseHelper {
                 "weight DOUBLE " +
                 ")";
         execSQL(sql, table_name);
+        execSQL("ALTER TABLE " + table_name + " ADD COLUMN height INT ", table_name);
+        execSQL("ALTER TABLE " + table_name + " ADD COLUMN workout DOUBLE ", table_name);
 
         /* create daily food log */
         table_name = daily_food_log;

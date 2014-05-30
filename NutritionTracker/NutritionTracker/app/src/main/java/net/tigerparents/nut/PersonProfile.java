@@ -19,18 +19,41 @@ public class PersonProfile {
     int age;
     String ageGroup;
     String status;
+    int height;
+    double workout;
+    double daily_kcal;
 
     public PersonProfile(String name, int birth, boolean gender, boolean isPregnant,
-                         boolean isLactating, double weight) {
+                         boolean isLactating, double weight, int height, double workout) {
         this.name = name;
         this.birth = birth;
         this.gender = gender ? "male" : "female";
         this.isPregnant = isPregnant;
         this.isLactating = isLactating;
         this.weight = weight;
+        this.height = height;
+        this.workout = workout;
         status = isLactating ? "lactation" : (isPregnant ? "pregnancy" : this.gender);
         setAgeInfo();
+
+        if (this.gender == "female") {
+            daily_kcal = 665 + 5.3 * weight + 4.7 * height - 4.7 * age;
+        } else {
+            daily_kcal = 660 + 6.3 * weight + 12.9 * height - 6.8 * age;
+        }
+
+        daily_kcal *= (1 + workout);
     }
+
+    /*
+    calculation:
+    If you are sedentary : BMR x 20 percent
+    If you are lightly active: BMR x 30 percent
+    If you are moderately active (You exercise most days a week.): BMR x 40 percent
+    If you are very active (You exercise intensely on a daily basis or for prolonged periods.): BMR x 50 percent
+    If you are extra active (You do hard labor or are in athletic training.): BMR x 60 percent
+    Add this number to your BMR.
+    */
 
     public static boolean profileEntered() {
         String sql = "select * from PERSON_PROFILE_TABLE";
@@ -63,9 +86,11 @@ public class PersonProfile {
                 String gender = dbCursor.getString(2);
                 String status = dbCursor.getString(3);
                 double weight = dbCursor.getDouble(4);
+                int height = dbCursor.getInt(5);
+                double workout = dbCursor.getDouble(6);
 
                 return new PersonProfile(name, birth_year, gender == "male",
-                        status == "lactation", status == "pregnancy", weight);
+                        status == "lactation", status == "pregnancy", weight, height, workout);
             } else
                 return null;
         } catch (Exception e) {
@@ -103,6 +128,10 @@ public class PersonProfile {
         return ageGroup;
     }
 
+    public double getDaily_kcal() {
+        return daily_kcal;
+    }
+
     public void setAgeInfo() {
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
         age = currYear - birth;
@@ -125,12 +154,14 @@ public class PersonProfile {
 
     public void savePersonProfile() {
         String status = getStatus();
-        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight) " +
+        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight, height, workout) " +
                 "values ( " + "\'" + name + "\', " +
                 +birth + ", " +
                 "\'" + gender + "\', " +
                 "\'" + status + "\', " +
-                +weight +
+                +weight + ", " +
+                +height + ", " +
+                +workout +
                 " ); ";
 
         NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, null);

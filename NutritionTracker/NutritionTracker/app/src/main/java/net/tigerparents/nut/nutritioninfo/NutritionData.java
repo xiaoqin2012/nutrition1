@@ -126,8 +126,12 @@ public class NutritionData {
                 /* get the std value */
                 double stdValue = -100;
 
-                stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
-
+                if (nuID.equals("208")) {
+                    nuName = "Calories";
+                    stdValue = profile.getDaily_kcal();
+                } else {
+                    stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
+                }
                 if (stdValue < 0) continue;
 
                 if (nuID.equals("312"))
