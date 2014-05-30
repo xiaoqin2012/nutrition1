@@ -8,8 +8,6 @@ import net.tigerparents.nut.Log;
 import net.tigerparents.nut.NutritionTrackerApp;
 import net.tigerparents.nut.PersonProfile;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -55,10 +53,6 @@ public class NutritionData {
             default:
                 return false;
         }
-    }
-
-    public static void export(OutputStream stream) throws IOException {
-        stream.close();
     }
 
     public void save() {
