@@ -5,6 +5,7 @@ import android.database.Cursor;
 import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
 import net.tigerparents.nut.Log;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -33,7 +34,7 @@ public class NutritionReport {
 
     public static ArrayList<FoodLogEntry> getRecentEntries(NutritionData.ReportTypes type) {
         NutritionReport log_report = new NutritionReport(type);
-        return log_report.getLog();
+        return log_report.getLog(null);
     }
 
     public static void deleteItem(NutritionData.ReportTypes type, String food_description) {
@@ -114,7 +115,7 @@ public class NutritionReport {
     }
 
 
-    public ArrayList<FoodLogEntry> getLog() {
+    public ArrayList<FoodLogEntry> getLog(OutputStream stream) {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
         try {
             String sql = "select * from " + table_name + " order by _date DESC;";
@@ -135,12 +136,20 @@ public class NutritionReport {
                 if (time_value == null) {
                     time_value = cursor.getString(dateIndex);
                 }
-                FoodLogEntry log_entry = new FoodLogEntry(
-                        time_value + " " + cursor.getString(foodIndex),
-                        cursor.getDouble(weightIndex),
-                        type
-                );
-                food_log.add(log_entry);
+
+                if (stream == null) {
+                    FoodLogEntry log_entry = new FoodLogEntry(
+                            time_value + " " + cursor.getString(foodIndex),
+                            cursor.getDouble(weightIndex),
+                            type);
+                    food_log.add(log_entry);
+                } else {
+                    String str = time_value + ", " +
+                            cursor.getString(foodIndex).replace(",", " ") + ", " +
+                            cursor.getDouble(weightIndex) + " ounces\n";
+                    byte data[] = str.getBytes();
+                    stream.write(data, 0, data.length);
+                }
                 cursor.moveToNext();
             }
         } catch (Exception e) {

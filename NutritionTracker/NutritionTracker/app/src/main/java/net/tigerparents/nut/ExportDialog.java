@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import net.tigerparents.nut.nutritioninfo.NutritionData;
+import net.tigerparents.nut.nutritioninfo.NutritionReport;
+
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -44,7 +47,8 @@ public class ExportDialog extends Activity {
     }
 
     public void onExport(View view) {
-        if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED) {
+        String storage_state = Environment.getExternalStorageState();
+        if (!storage_state.equals(Environment.MEDIA_MOUNTED)) {
             Log.e("Export Dialog", "media not mounted");
             // error out
             gotoErrorDialog();
@@ -54,7 +58,8 @@ public class ExportDialog extends Activity {
         try {
             File exportFile = new File(Environment.getExternalStorageDirectory(), filename);
             FileOutputStream output = new FileOutputStream(exportFile);
-            net.tigerparents.nut.nutritioninfo.NutritionData.export(output);
+            NutritionReport nuReport = new NutritionReport(NutritionData.ReportTypes.DAILY);
+            nuReport.getLog(output);
 
             String new_intent_string = getIntent().getStringExtra("callback");
             Intent return_value = new Intent(new_intent_string);

@@ -8,8 +8,6 @@ import net.tigerparents.nut.Log;
 import net.tigerparents.nut.NutritionTrackerApp;
 import net.tigerparents.nut.PersonProfile;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -55,10 +53,6 @@ public class NutritionData {
             default:
                 return false;
         }
-    }
-
-    public static void export(OutputStream stream) throws IOException {
-        stream.close();
     }
 
     public void save() {
@@ -132,8 +126,12 @@ public class NutritionData {
                 /* get the std value */
                 double stdValue = -100;
 
-                stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
-
+                if (nuID.equals("208")) {
+                    nuName = "Calories";
+                    stdValue = profile.getDaily_kcal();
+                } else {
+                    stdValue = getSTDValue(stdValueCursor, profile, nuID, value);
+                }
                 if (stdValue < 0) continue;
 
                 if (nuID.equals("312"))
