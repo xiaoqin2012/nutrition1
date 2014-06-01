@@ -19,9 +19,9 @@ public class PersonProfile {
     int age;
     String ageGroup;
     String status;
-    int height;
-    double workout;
     double daily_kcal;
+    private int height;
+    private double workout;
 
     public PersonProfile(String name, int birth, boolean gender, boolean isPregnant,
                          boolean isLactating, double weight, int height, double workout) {
@@ -31,8 +31,8 @@ public class PersonProfile {
         this.isPregnant = isPregnant;
         this.isLactating = isLactating;
         this.weight = weight;
-        this.height = height;
-        this.workout = workout;
+        this.setHeight(height);
+        this.setWorkout(workout);
         status = isLactating ? "lactation" : (isPregnant ? "pregnancy" : this.gender);
         setAgeInfo();
 
@@ -160,8 +160,8 @@ public class PersonProfile {
                 "\'" + gender + "\', " +
                 "\'" + status + "\', " +
                 +weight + ", " +
-                +height + ", " +
-                +workout +
+                +getHeight() + ", " +
+                +getWorkout() +
                 " ); ";
 
         NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, null);
@@ -169,5 +169,21 @@ public class PersonProfile {
 
     public String getStatus() {
         return status;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public double getWorkout() {
+        return workout;
+    }
+
+    public void setWorkout(double workout) {
+        this.workout = workout;
     }
 }
