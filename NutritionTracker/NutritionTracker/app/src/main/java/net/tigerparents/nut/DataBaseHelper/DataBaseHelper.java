@@ -107,17 +107,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean execSQL(String sql, String table_name) {
+        getDataBase().beginTransaction();
         try {
-            getDataBase().beginTransaction();
             getDataBase().execSQL(sql);
             getDataBase().setTransactionSuccessful();
-            getDataBase().endTransaction();
-            return true;
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             Log.e(e.getClass().getName(), e.getMessage(), e);
-            return false;
+        } finally {
+            getDataBase().endTransaction();
         }
+
+        return true;
     }
 
     public void getAllTables() {

@@ -14,6 +14,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
     public static String person_profile_tab_name = "PERSON_PROFILE_TABLE";
     public static String daily_food_log = "DAILY_FOOD_LOG";
     public static String weekly_food_log = "WEEKLY_FOOD_LOG";
+    public static String favorite_food_log = "FAVORITE_FOOD_LOG";
 
     /**
      * Constructor
@@ -74,6 +75,12 @@ public class LogDataBaseHelper extends DataBaseHelper {
                 "weight DOUBLE )";
         execSQL(sql, table_name);
         execSQL("ALTER TABLE " + table_name + " ADD COLUMN time STRING DEFAULT null", table_name);
+
+        /* create favorite_food_log */
+        table_name = favorite_food_log;
+        sql = "create table if not exists " + table_name + " (" +
+                "_foodname STRING " + ")";
+        execSQL(sql, table_name);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

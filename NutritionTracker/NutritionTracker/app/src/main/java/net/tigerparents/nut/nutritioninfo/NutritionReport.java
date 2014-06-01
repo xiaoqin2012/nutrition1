@@ -118,7 +118,9 @@ public class NutritionReport {
     public ArrayList<FoodLogEntry> getLog(OutputStream stream) {
         ArrayList<FoodLogEntry> food_log = new ArrayList<FoodLogEntry>();
         try {
-            String sql = "select * from " + table_name + " order by _date DESC;";
+            //String sql = "select * from " + table_name + " order by _date DESC;";
+            String sql = "select * from " + table_name + ";";
+
             Cursor cursor = getLogDatabaseHelper().getDataBase().rawQuery(sql, null);
             int dateIndex = cursor.getColumnIndex("_date");
             int timeIndex = cursor.getColumnIndex("time");
@@ -134,7 +136,8 @@ public class NutritionReport {
             while (!cursor.isAfterLast()) {
                 time_value = cursor.getString(timeIndex);
                 if (time_value == null) {
-                    time_value = cursor.getString(dateIndex);
+                    if ((time_value = cursor.getString(dateIndex)) == null)
+                        time_value = "null";
                 }
 
                 if (stream == null) {
@@ -146,7 +149,7 @@ public class NutritionReport {
                 } else {
                     String str = time_value + ", " +
                             cursor.getString(foodIndex).replace(",", " ") + ", " +
-                            cursor.getDouble(weightIndex) + " ounces\n";
+                            cursor.getDouble(weightIndex) + " ounce\n";
                     byte data[] = str.getBytes();
                     stream.write(data, 0, data.length);
                 }

@@ -46,6 +46,7 @@ public class PersonProfile {
     }
 
     /*
+    http://weightloss.about.com/od/eatsmart/a/blcalintake.htm
     calculation:
     If you are sedentary : BMR x 20 percent
     If you are lightly active: BMR x 30 percent
@@ -142,8 +143,7 @@ public class PersonProfile {
         } else if (isBetween(age, 4, 8)) {
             ageGroup = "8";
             status = "child";
-        }
-        else if (isBetween(age, 9, 13)) ageGroup = "13";
+        } else if (isBetween(age, 9, 13)) ageGroup = "13";
         else if (isBetween(age, 14, 18)) ageGroup = "18";
         else if (isBetween(age, 19, 30)) ageGroup = "30";
         else if (isBetween(age, 31, 50)) ageGroup = "50";
