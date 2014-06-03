@@ -16,11 +16,21 @@
         <item>Monthly</item>
     </string-array>
 
+    <string-array name="activity_levels">
+        <item>Sedentary/Inactive</item>
+        <item>Light Activity</item>
+        <item>Weekend Athlete/Moderate Laborer</item>
+        <item>Active Every Day/Sporting</item>
+        <item>Intensely Active/Laborer</item>
+    </string-array>
+
+
     <string name="title_activity_export_dialog">export_dialog</string>
     <string name="title_activity_export_dialog_error">ExportDialogError</string>
     <string name="title_activity_shopping_entry">ShoppingEntry</string>
     <string name="title_activity_shopping_tracker">ShoppingTracker</string>
     <string name="title_activity_show_recent_entries">ShowRecentEntries</string>
     <string name="title_activity_recommended_food">RecommendedFood</string>
+    <string name="title_activity_enter_user_data2">EnterUserData2</string>
 
 </resources>

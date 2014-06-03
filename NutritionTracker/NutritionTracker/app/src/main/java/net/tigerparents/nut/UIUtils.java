@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by piaw on 4/15/2014.
  */
 public class UIUtils {
+    public static PersonProfile s_PP;
     private static ArrayList<String> s_foodNames;
 
     public static void showNutritionInfo(Activity activity, ListView listview,

@@ -65,7 +65,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="55dp"
         android:onClick="userSave"
-        android:text="Save" />
+        android:text="Next" />
 
     <TextView
         android:id="@+id/textView2"
