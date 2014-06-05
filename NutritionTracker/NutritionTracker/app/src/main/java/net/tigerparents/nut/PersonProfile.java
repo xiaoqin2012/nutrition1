@@ -35,14 +35,7 @@ public class PersonProfile {
         this.setWorkout(workout);
         status = isLactating ? "lactation" : (isPregnant ? "pregnancy" : this.gender);
         setAgeInfo();
-
-        if (this.gender == "female") {
-            daily_kcal = 665 + 5.3 * weight + 4.7 * height - 4.7 * age;
-        } else {
-            daily_kcal = 660 + 6.3 * weight + 12.9 * height - 6.8 * age;
-        }
-
-        daily_kcal *= (1 + workout);
+        setDailyKcal();
     }
 
     /*
@@ -129,8 +122,18 @@ public class PersonProfile {
         return ageGroup;
     }
 
-    public double getDaily_kcal() {
+    public double getDailyKcal() {
         return daily_kcal;
+    }
+
+    void setDailyKcal() {
+        if (this.gender == "female") {
+            daily_kcal = 665 + 5.3 * weight + 4.7 * height - 4.7 * age;
+        } else {
+            daily_kcal = 660 + 6.3 * weight + 12.9 * height - 6.8 * age;
+        }
+
+        daily_kcal *= (1 + workout / 100);
     }
 
     public void setAgeInfo() {
@@ -154,7 +157,11 @@ public class PersonProfile {
 
     public void savePersonProfile() {
         String status = getStatus();
-        String sql = "insert into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight, height, workout) " +
+        String sql = "delete from PERSON_PROFILE_TABLE; ";
+
+        NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, null);
+
+        sql = "insert or replace into PERSON_PROFILE_TABLE (_name, birth, gender, status, weight, height, workout) " +
                 "values ( " + "\'" + name + "\', " +
                 +birth + ", " +
                 "\'" + gender + "\', " +
