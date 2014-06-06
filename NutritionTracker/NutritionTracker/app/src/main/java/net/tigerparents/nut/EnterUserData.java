@@ -108,7 +108,7 @@ public class EnterUserData extends Activity {
         String name = _name.getText().toString();
         int year = _birthyear.getValue();
         UIUtils.s_PP = new PersonProfile(name, year, _person_gender, _is_person_pregnant,
-                _is_person_lactating, _weight.getValue(), 64, 0);
+                _is_person_lactating, _weight.getValue(), 0, 0);
         UIUtils.HideKeyboard(this, _name);
         Intent intent = new Intent(this, EnterUserData2.class);
         startActivity(intent);

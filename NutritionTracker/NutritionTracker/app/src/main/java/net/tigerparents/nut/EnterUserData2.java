@@ -72,8 +72,9 @@ public class EnterUserData2 extends Activity implements AdapterView.OnItemSelect
         PersonProfile pp = UIUtils.s_PP;
 
         pp.setHeight(_height_picker.getValue());
-        double activityMap[] = {0.0, 20.0, 40.0, 60.0, 80.0, 100.0};
+        double activityMap[] = {0.0, 20.0, 30.0, 40.0, 50.0, 60.0};
         pp.setWorkout(activityMap[activity_level]);
+        pp.setDailyKcal();
         pp.savePersonProfile();
         Intent intent = new Intent(this, StartScreen.class);
         startActivity(intent);
