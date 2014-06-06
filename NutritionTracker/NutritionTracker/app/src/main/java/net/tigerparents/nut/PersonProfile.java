@@ -14,12 +14,12 @@ public class PersonProfile {
     String gender;
     boolean isPregnant;
     boolean isLactating;
-    double weight;
     //calculated:
     int age;
     String ageGroup;
     String status;
     double daily_kcal;
+    private double weight;
     private int height;
     private double workout;
 
@@ -30,7 +30,7 @@ public class PersonProfile {
         this.gender = gender ? "male" : "female";
         this.isPregnant = isPregnant;
         this.isLactating = isLactating;
-        this.weight = weight;
+        this.setWeight(weight);
         this.setHeight(height);
         this.setWorkout(workout);
         status = isLactating ? "lactation" : (isPregnant ? "pregnancy" : this.gender);
@@ -117,6 +117,9 @@ public class PersonProfile {
         return weight;
     }
 
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
 
     public String getAgeGroup() {
         return ageGroup;
@@ -128,9 +131,9 @@ public class PersonProfile {
 
     void setDailyKcal() {
         if (this.gender == "female") {
-            daily_kcal = 665 + 5.3 * weight + 4.7 * height - 4.7 * age;
+            daily_kcal = 665 + 5.3 * getWeight() + 4.7 * height - 4.7 * age;
         } else {
-            daily_kcal = 660 + 6.3 * weight + 12.9 * height - 6.8 * age;
+            daily_kcal = 660 + 6.3 * getWeight() + 12.9 * height - 6.8 * age;
         }
 
         daily_kcal *= (1 + workout / 100);
@@ -166,7 +169,7 @@ public class PersonProfile {
                 +birth + ", " +
                 "\'" + gender + "\', " +
                 "\'" + status + "\', " +
-                +weight + ", " +
+                +getWeight() + ", " +
                 +getHeight() + ", " +
                 +getWorkout() +
                 " ); ";
