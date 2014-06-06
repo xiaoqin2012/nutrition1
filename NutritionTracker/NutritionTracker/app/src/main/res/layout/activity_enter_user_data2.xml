@@ -32,9 +32,10 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/button"
         android:layout_alignLeft="@+id/textView2"
         android:layout_alignStart="@+id/textView2"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="44dp"
         android:text="Activity Level"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -55,5 +56,24 @@
         android:layout_marginBottom="56dp"
         android:onClick="onSave"
         android:text="Save" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_below="@+id/heightPicker"
+        android:layout_marginTop="50dp"
+        android:text="Weight in Pounds"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <NumberPicker
+        android:id="@+id/weightPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/heightPicker"
+        android:layout_alignStart="@+id/heightPicker"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

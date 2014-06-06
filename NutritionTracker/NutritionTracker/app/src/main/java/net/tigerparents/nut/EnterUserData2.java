@@ -15,6 +15,7 @@ import android.widget.Spinner;
 public class EnterUserData2 extends Activity implements AdapterView.OnItemSelectedListener {
 
     NumberPicker _height_picker;
+    NumberPicker _weight_picker;
     private int activity_level;
 
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -34,10 +35,14 @@ public class EnterUserData2 extends Activity implements AdapterView.OnItemSelect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_user_data2);
         _height_picker = (NumberPicker) findViewById(R.id.heightPicker);
+        _weight_picker = (NumberPicker) findViewById(R.id.weightPicker);
         Spinner activitySpinner = (Spinner) findViewById(R.id.activity_spinner);
         _height_picker.setMinValue(12);
         _height_picker.setMaxValue(100);
         _height_picker.setValue(60);
+        _weight_picker.setMinValue(20);
+        _weight_picker.setMinValue(500);
+        _weight_picker.setValue(100);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.activity_levels, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
@@ -72,6 +77,7 @@ public class EnterUserData2 extends Activity implements AdapterView.OnItemSelect
         PersonProfile pp = UIUtils.s_PP;
 
         pp.setHeight(_height_picker.getValue());
+        pp.setWeight(_weight_picker.getValue());
         double activityMap[] = {0.0, 20.0, 30.0, 40.0, 50.0, 60.0};
         pp.setWorkout(activityMap[activity_level]);
         pp.setDailyKcal();
