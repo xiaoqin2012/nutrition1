@@ -77,14 +77,7 @@ public class NutritionData {
                 ");";
 
         NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, table_name);
-
-        table_name = NutritionTrackerApp.getLogDatabaseHelper().favorite_food_log;
-        sql = "insert into " + table_name + " (_foodname) " +
-                "values ( " +
-                "\'" + food_name + "\' " +
-                ");";
-
-        NutritionTrackerApp.getLogDatabaseHelper().execSQL(sql, table_name);
+        NutritionTrackerApp.getLogDatabaseHelper().updateFoodNames(food_name);
     }
 
     public ArrayList<NutritionInformation> getNutritionInformation(boolean is_std_needed, boolean toSort) {

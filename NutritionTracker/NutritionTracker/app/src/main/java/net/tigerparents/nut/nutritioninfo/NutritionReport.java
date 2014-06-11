@@ -159,6 +159,7 @@ public class NutritionReport {
             Log.e(e.getClass().getName(), e.getMessage(), e);
         }
 
+        Collections.reverse(food_log);
         return food_log;
     }
 

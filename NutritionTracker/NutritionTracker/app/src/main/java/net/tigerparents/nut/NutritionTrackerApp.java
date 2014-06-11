@@ -2,12 +2,9 @@ package net.tigerparents.nut;
 
 import android.app.Application;
 import android.content.Context;
-import android.database.Cursor;
 
 import net.tigerparents.nut.DataBaseHelper.LogDataBaseHelper;
 import net.tigerparents.nut.DataBaseHelper.USDADataBaseHelper;
-
-import java.util.ArrayList;
 
 /**
  * Created by piaw on 4/8/2014.
@@ -32,31 +29,6 @@ public class NutritionTrackerApp extends Application {
 
     public static Context getAppContext() {
         return NutritionTrackerApp.context;
-    }
-
-    public static ArrayList<String> getFoodNames() {
-        ArrayList<String> food_list = new ArrayList<String>();
-        String sql;
-
-        try {
-            sql = "SELECT _id, Long_Desc FROM FOOD_NUT_DATA;";
-            Cursor cursor = usda_db_helper.getDataBase().rawQuery(sql, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    String food_name = cursor.getString(1);
-                    if (food_name != null && !food_name.startsWith("Babyfood")
-                            && !food_name.startsWith("Infant"))
-                        food_list.add(cursor.getString(1));
-                } while (cursor.moveToNext());
-            }
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return food_list;
-        }
-
-        System.out.println("successfully");
-        return food_list;
     }
 
     @Override

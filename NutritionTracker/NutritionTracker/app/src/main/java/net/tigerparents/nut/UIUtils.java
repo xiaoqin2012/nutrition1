@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class UIUtils {
     public static PersonProfile s_PP;
-    private static ArrayList<String> s_foodNames;
+    public static ArrayList<String> s_foodNames = null;
 
     public static void showNutritionInfo(Activity activity, ListView listview,
                                          ArrayList<NutritionInformation> info,
@@ -53,14 +53,15 @@ public class UIUtils {
                 InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
-    public static ArrayList<String> memoizedGetFoodNames() {
+    /*public static ArrayList<String> memoizedGetFoodNames() {
         if (s_foodNames == null)
-            s_foodNames = NutritionTrackerApp.getFoodNames();
+            s_foodNames = NutritionTrackerApp.getLogDatabaseHelper().getFoodNames();
+
         return s_foodNames;
-    }
+    }*/
 
     public static void setupTextViewWithFoodNames(Activity activity, AutoCompleteTextView food_tv) {
-        ArrayList<String> food_names = memoizedGetFoodNames();
+        ArrayList<String> food_names = NutritionTrackerApp.getLogDatabaseHelper().getFoodNames();
         String[] template = new String[10];
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,
