@@ -147,7 +147,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
     }
 
     public void updateFoodNames(String food_name) {
-        if (food_names.contains(food_name) == false)
-            food_names.add(0, food_name);
+        food_names.remove(food_name);
+        food_names.add(0, food_name);
     }
 }
