@@ -8,6 +8,8 @@ import net.tigerparents.nut.Log;
 import net.tigerparents.nut.NutritionTrackerApp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by xiaoqin on 4/20/2014.
@@ -19,6 +21,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
     public static String daily_food_log = "DAILY_FOOD_LOG";
     public static String weekly_food_log = "WEEKLY_FOOD_LOG";
     public ArrayList<String> food_names;
+    public Set<String> favorite_food_names;
 
     /**
      * Constructor
@@ -99,6 +102,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
 
     public void setFoodNames() {
         food_names = new ArrayList<String>();
+        favorite_food_names = new HashSet<String>();
 
         getFavoriteFoodNames(daily_food_log);
         getFavoriteFoodNames(weekly_food_log);
@@ -112,7 +116,7 @@ public class LogDataBaseHelper extends DataBaseHelper {
                     String food_name = cursor.getString(1);
                     if (food_name != null && !food_name.startsWith("Babyfood")
                             && !food_name.startsWith("Infant")
-                            && food_names.contains(food_name) == false) {
+                            && favorite_food_names.contains(food_name) == false) {
                         food_names.add(cursor.getString(1));
                     }
                 } while (cursor.moveToNext());
@@ -135,7 +139,8 @@ public class LogDataBaseHelper extends DataBaseHelper {
                 do {
                     String food_name = cursor.getString(index);
                     if (food_name != null
-                            && food_names.contains(food_name) == false) {
+                            && favorite_food_names.contains(food_name) == false) {
+                        favorite_food_names.add(food_name);
                         food_names.add(food_name);
                     }
                 } while (cursor.moveToNext());
@@ -147,6 +152,9 @@ public class LogDataBaseHelper extends DataBaseHelper {
     }
 
     public void updateFoodNames(String food_name) {
+        if (favorite_food_names.contains(food_name))
+            return;
+        favorite_food_names.add(food_name);
         food_names.remove(food_name);
         food_names.add(0, food_name);
     }
