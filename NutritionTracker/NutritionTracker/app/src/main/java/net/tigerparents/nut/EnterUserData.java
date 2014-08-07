@@ -20,7 +20,6 @@ public class EnterUserData extends Activity {
     Switch _gender;
     Switch _pregnant;
     Switch _lactating;
-    NumberPicker _weight;
 
     boolean _person_gender; // female = false, male = true
     boolean _is_person_pregnant; // ! pregnant = false, pregnant = true
@@ -35,24 +34,28 @@ public class EnterUserData extends Activity {
         _gender = (Switch) findViewById(R.id.gender);
         _pregnant = (Switch) findViewById(R.id.pregnant);
         _lactating = (Switch) findViewById(R.id.lactate);
-        _weight = (NumberPicker) findViewById(R.id.weightPicker);
 
         setDefaultPersonProfile();
+
         if (PersonProfile.profileEntered()) {
             readDefaultPersonProfile();
+        } else {
+            UIUtils.s_PP = new PersonProfile("Azhu", 1970, false, false, false, 100, 50, 0);
         }
+
         _name.requestFocusFromTouch();
+
         UIUtils.ShowKeyboard(this);
     }
 
     private void readDefaultPersonProfile() {
-        PersonProfile pp = PersonProfile.getPersonProfile();
-        _name.setText(pp.getName());
-        _birthyear.setValue(pp.getBirth());
-        _gender.setChecked(pp.getGender());
-        _weight.setValue((int) pp.getWeight());
-        _is_person_pregnant = pp.isPregnant();
-        _is_person_lactating = pp.isLactating();
+        UIUtils.s_PP = PersonProfile.getPersonProfile();
+
+        _name.setText(UIUtils.s_PP.getName());
+        _birthyear.setValue(UIUtils.s_PP.getBirth());
+        _gender.setChecked(UIUtils.s_PP.getGender());
+        _is_person_pregnant = UIUtils.s_PP.isPregnant();
+        _is_person_lactating = UIUtils.s_PP.isLactating();
     }
 
     private void setDefaultPersonProfile() {
@@ -61,7 +64,7 @@ public class EnterUserData extends Activity {
         int currentyear = cal.get(Calendar.YEAR);
         _birthyear.setMaxValue(currentyear);
         _birthyear.setMinValue(currentyear - 150);
-        _birthyear.setValue(currentyear - 25); // everybody wants to be 25
+        _birthyear.setValue(currentyear - 50); // everybody wants to be 25
         _gender.setTextOn("male");
         _gender.setTextOff("female");
         _pregnant.setTextOn("Pregnant");
@@ -90,9 +93,6 @@ public class EnterUserData extends Activity {
 
             }
         });
-        _weight.setMinValue(0);
-        _weight.setMaxValue(500);
-        _weight.setValue(100); // should make women happy
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -108,7 +108,8 @@ public class EnterUserData extends Activity {
         String name = _name.getText().toString();
         int year = _birthyear.getValue();
         UIUtils.s_PP = new PersonProfile(name, year, _person_gender, _is_person_pregnant,
-                _is_person_lactating, _weight.getValue(), 0, 0);
+                _is_person_lactating, UIUtils.s_PP.getWeight(), UIUtils.s_PP.getHeight(),
+                UIUtils.s_PP.getWorkout());
         UIUtils.HideKeyboard(this, _name);
         Intent intent = new Intent(this, EnterUserData2.class);
         startActivity(intent);

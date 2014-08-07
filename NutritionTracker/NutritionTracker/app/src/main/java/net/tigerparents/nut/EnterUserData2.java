@@ -39,10 +39,10 @@ public class EnterUserData2 extends Activity implements AdapterView.OnItemSelect
         Spinner activitySpinner = (Spinner) findViewById(R.id.activity_spinner);
         _height_picker.setMinValue(12);
         _height_picker.setMaxValue(100);
-        _height_picker.setValue(60);
+        _height_picker.setValue(UIUtils.s_PP.getHeight());
         _weight_picker.setMinValue(20);
-        _weight_picker.setMinValue(500);
-        _weight_picker.setValue(100);
+        _weight_picker.setMaxValue(500);
+        _weight_picker.setValue((int) UIUtils.s_PP.getWeight());
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.activity_levels, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
